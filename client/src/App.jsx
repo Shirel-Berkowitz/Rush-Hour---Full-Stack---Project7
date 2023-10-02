@@ -7,6 +7,7 @@ import Register from "./pages/Register.jsx";
 // import HomePage from "./HomePage";
 import Users from "./pages/Users.jsx";
 import Info from "./pages/Info.jsx";
+import Cameras from "./pages/Cameras.jsx";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Navigate to="/Login" />} />
         <Route path="Users" element={<Users />}>
           <Route path=":id/Info" element={<Info />} />
+          <Route path=":id/Cameras" element={<Cameras />} />
         </Route>
       </Routes>
     </BrowserRouter>

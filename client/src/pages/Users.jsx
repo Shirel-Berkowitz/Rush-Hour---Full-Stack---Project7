@@ -19,15 +19,8 @@ const Users = () => {
       </Link>
       <nav className="user-navigation">
         <ul>
-          <li>
-            {/* <Link to={`/Users/${user.id}/Posts`}>Posts</Link> */}
-          </li>
-          <li>
-            {/* <Link to={`/Users/${user.id}/Todos`}>Todos</Link> */}
-          </li>
-          <li>
-            { <Link to={`/Users/${user.id}/Info`}>Info</Link> }
-          </li>
+          <li>{<Link to={`/Users/${user.id}/Cameras`}>Cameras</Link>}</li>
+          <li>{<Link to={`/Users/${user.id}/Info`}>Info</Link>}</li>
         </ul>
       </nav>
 
