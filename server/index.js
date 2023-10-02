@@ -1,4 +1,4 @@
-console.log("index");
+
 const mysql = require("mysql2");
 const express = require("express");
 const secret = require("./password.json");
@@ -48,15 +48,7 @@ app.use('/cameraAccessAPI', cameraAccessRouter);
 //   next();
 // });
 
-// const databaseConnection = mysql.createConnection({
-//   host: "localhost",
-//   user: "root",
-//   password: secret.password,
-//   port: 3306,
-//   database: "project7",
-// });
 
-// module.exports = databaseConnection;
 
 const port = 3000;
 

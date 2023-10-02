@@ -19,9 +19,7 @@ const Info = () => {
             <h3 className="info-item">ID: {user.id}</h3>
             <h3 className="info-item">Name: {user.name}</h3>
             <h3 className="info-item">Username: {user.username}</h3>
-            <h3 className="info-item">Email: {user.email}</h3>
-            <h3 className="info-item">Phone: {user.phone}</h3>
-            <h3 className="info-item">Rank: {user.rank}</h3>
+            <h3 className="info-item">Rank: {user.userRank}</h3>
           </div>
         </div>
       )}

@@ -1,4 +1,4 @@
-console.log("userAPI");
+
 const express = require("express");
 
 const {databaseConnection} = require("./connectionDB.js"); // Import your database connection object
@@ -13,41 +13,9 @@ const usersRouter= express.Router();
 
 
 
-//GET request to fetch all users
-// usersRouter.get("/api/users", (req, res) => {
-//   console.log("1");
-//   databaseConnection.query(
-//     "SELECT * FROM users",
-//     (error, results) => {
-//       if (error) {
-//         res.status(500).json({ error: "An error occurred while fetching users." });
-//       } else {
-//         res.json(results);
-//       }
-//     }
-//   );
-// });
 
-// POST request to fetch a user by username
-// usersRouter.post("/api/users/:username",async (req, res) => {
-//   console.log("2");
-//   const username = req.params.username;
-//   const query = "SELECT * FROM users WHERE username = ?";
 
-//   let results;
-//   try{
-//     results=await databaseConnection.query(query, [username]) 
-//   }catch(e){
-//     res.status(400).send(JSON.stringify("something went wrong,plese try again"));
-//     return;
-//   }
-//       if (results.length === 0) {
-//         res.status(404).json({ message: "User not found." });
-//       } else {
-//         res.json(results[0]);
-//       }
-//     }
-//  );
+
 
 
 // GET request to fetch a user by ID
@@ -140,48 +108,12 @@ const usersRouter= express.Router();
 //     }
 //   });
 
-// POST request to create a new user
-// usersRouter.post("/api/users", (req, res) => {
-//   console.log("7");
-//   const { username, name, userRank } = req.body;
-//   const query = "INSERT INTO users (username, name, userRank) VALUES (?, ?, ?)";
-
-//   databaseConnection.query(
-//     query,
-//     [username, name, userRank],
-//     (error, results) => {
-//       if (error) {
-//         res
-//           .status(500)
-//           .json({ error: "An error occurred while creating a user." });
-//       } else {
-//         res.json({
-//           message: "User created successfully.",
-//           userId: results.insertId,
-//         });
-//       }
-//     }
-//   );
-// });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+///POST///
 usersRouter.post('/api/users/login', async (req, res) => {
-  console.log("yes");
     const { username, password } = req.body;
-    console.log(username);
-    console.log(password);
+    
   
     if (!username || !password) {
       return res.status(400).json({ error: 'Missing username or password' });
@@ -194,7 +126,7 @@ usersRouter.post('/api/users/login', async (req, res) => {
     
     try{
       results1 = await databaseConnection.query(getIdQuery, [username]);
-      console.log(results1);
+     
     }catch(e){
       res.status(400).send(JSON.stringify("Server error"));
        return; 
@@ -221,7 +153,6 @@ usersRouter.post('/api/users/login', async (req, res) => {
       console.log(results2);
     }catch(e){
       res.status(400).send(JSON.stringify("Server error"));
-      console.log("results");
        return; 
     }
   
@@ -252,16 +183,87 @@ usersRouter.post('/api/users/login', async (req, res) => {
          }
 
         const userName = nameResults[0][0].name;
-        console.log(userName);
+        
 
   
         if (userPassword === password) {
           // Password is correct
-          return res.json({ success: true, message: 'Login successful' });
+          
+
+          res.json(username);
+
+          
+
         } else {
           // Password is incorrect
+          
           return res.status(401).json({ message: 'Incorrect password' });
         }
+      });
+
+
+
+      usersRouter.post("/api/users/:username/password",async (req, res) => {
+        const password = {
+          username: req.params.username,
+          password: req.body.password,
+        };
+        const getUserQuery ="INSERT INTO passwords (username, password) VALUES (?, ?)";
+        let result;
+          
+        try {
+          result = await databaseConnection.query(getUserQuery,
+             [password.username, password.password]);
+          console.log(result);
+         } catch (e) {
+            res.status(400).send(JSON.stringify("error"));
+            return;
+          }
+          res.status(200);
+          //res.json(password);
+        });
+
+
+        usersRouter.post("/api/users",async (req, res) => {
+          const user = {
+            name: req.body.name,
+            username: req.body.username,
+            userRank: req.body.userRank,
+          };
+          const getUserQuery =`INSERT INTO users (name, usernam, userRank ) VALUES (?, ?, ?)`;
+          let result;
+            
+          try {
+            result = await databaseConnection.query(getUserQuery,
+               [user.name,
+                user.username,
+                user.userRank,]);
+            console.log(result);
+           } catch (e) {
+              res.status(400).send(JSON.stringify("error"));
+              return;
+            }
+            res.status(200);
+            //res.json(user);
+          });
+
+      ///GET///
+      usersRouter.get('/api/users/login/:username', async (req, res) => {
+        let username = req.params.username;
+        
+       const getUserQuery ="SELECT * FROM users WHERE username = ?";
+        let result;
+
+        try {
+          result = await databaseConnection.query(getUserQuery, [username]);
+          console.log(result);
+         } catch (e) {
+            res.status(400).send(JSON.stringify("error"));
+            return;
+          }
+          
+          res.json(result[0]);
+          
       });
  
 

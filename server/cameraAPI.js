@@ -1,4 +1,4 @@
-console.log("cameraAPI");
+
 const express = require("express");
 
 const databaseConnection = require("./index.js"); // Import your database connection object
