@@ -73,7 +73,13 @@ export default function Login(){
           console.log("currentUser");
           console.log(currentUser);
         localStorage.setItem("currentUser", JSON.stringify(currentUser));
-        navigate(`/Users`);
+        if (currentUser.userRank === "admin"){
+          navigate(`/Admin`);
+        }
+        else{
+          navigate(`/Users`);
+        }
+        
          }catch (error) {
           //           console.error(error);
            }
@@ -136,10 +142,10 @@ export default function Login(){
             <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
           </button>
           <br />
-          <div>
+          {/* <div>
             <span> Don't have an account? </span>
             <Link to="/Register">Sign up</Link>
-          </div>
+          </div> */}
         </div>
         <button type="submit">Login</button>
       </form>

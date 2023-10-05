@@ -14,7 +14,7 @@ const Register = () => {
     const user = {
       name: inputs.name,
       username: inputs.username,
-      userRankrank: inputs.userRankrank,
+      userRank: inputs.userRank,
     };
     console.log("1");
 
@@ -29,13 +29,16 @@ const Register = () => {
       });
 
       const data = await response.json();
-      console.log("data");
-      console.log(data[0]);
+      console.log(data);
+      //console.log(data[0]);
 
       const password = {
         username: inputs.username,
         password: inputs.password,
       };
+      console.log("password");
+      console.log(password);
+      
 
       const passwordResponse = await fetch(
         `http://localhost:3000/userAPI/api/users/${inputs.username}/password`,
@@ -50,7 +53,9 @@ const Register = () => {
 
       const passwordData = await passwordResponse.json();
       console.log(passwordData);
-      navigate(`/Login`);
+      
+      navigate(`/Admin`);
+      alert("The addition of the user has been recorded in the system");
     } catch (error) {
       console.error(error);
     }

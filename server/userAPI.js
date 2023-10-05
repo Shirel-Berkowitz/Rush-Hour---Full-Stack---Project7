@@ -201,30 +201,8 @@ usersRouter.post('/api/users/login', async (req, res) => {
         }
       });
 
-
-
-      usersRouter.post("/api/users/:username/password",async (req, res) => {
-        const password = {
-          username: req.params.username,
-          password: req.body.password,
-        };
-        const getUserQuery ="INSERT INTO passwords (username, password) VALUES (?, ?)";
-        let result;
-          
-        try {
-          result = await databaseConnection.query(getUserQuery,
-             [password.username, password.password]);
-          console.log(result);
-         } catch (e) {
-            res.status(400).send(JSON.stringify("error"));
-            return;
-          }
-          res.status(200);
-          //res.json(password);
-        });
-
-
         usersRouter.post("/api/users",async (req, res) => {
+          console.log("a");
           const user = {
             name: req.body.name,
             username: req.body.username,
@@ -232,20 +210,45 @@ usersRouter.post('/api/users/login', async (req, res) => {
           };
           const getUserQuery =`INSERT INTO users (name, usernam, userRank ) VALUES (?, ?, ?)`;
           let result;
-            
+          console.log("b");
+          console.log(user);
           try {
             result = await databaseConnection.query(getUserQuery,
                [user.name,
                 user.username,
-                user.userRank,]);
-            console.log(result);
+                user.userRank]);
+                console.log("c");
+                console.log("result");
+                console.log(result);
            } catch (e) {
-              res.status(400).send(JSON.stringify("error"));
+              res.status(400).send(JSON.stringify("Server error"));
+              console.log("d");
               return;
             }
-            res.status(200);
-            //res.json(user);
+            //res.status(200);
+            res.json(user);
           });
+
+          usersRouter.post("/api/users/:username/password",async (req, res) => {
+            const password = {
+              username: req.params.username,
+              password: req.body.password,
+            };
+            const getUserQuery ="INSERT INTO passwords (username, password) VALUES (?, ?)";
+            let result;
+              
+            try {
+              result = await databaseConnection.query(getUserQuery,
+                 [password.username, password.password]);
+              console.log("result");
+              console.log(result);
+             } catch (e) {
+                res.status(400).send(JSON.stringify("error"));
+                return;
+              }
+              //res.status(200);
+              res.json(password);
+            });
 
       ///GET///
       usersRouter.get('/api/users/login/:username', async (req, res) => {
