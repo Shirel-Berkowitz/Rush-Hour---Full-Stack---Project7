@@ -13,7 +13,7 @@ const Cameras = () => {
   async function fetchData() {
     try {
       const response = await fetch(
-        `http://localhost:3000/cameraAccessAPI/api/${user.id}`,
+        `http://localhost:3000/cameraAccessAPI/api/cameraAccess/${user.id}`,
       );
       //Camera ID
       const data = await response.json();
@@ -58,13 +58,18 @@ const Cameras = () => {
     }
   }
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    fetchData();
+  };
+
   return (
     <div className="info-container">
       <h1 className="cam-header">Cameras</h1>
       {user && (
         <div className="background">
           <div className="cam-details">
-            <button>
+            <button onClick={handleSubmit}>
               <h3 className="cam-item">Location: {user.id}</h3>
               <h4 className="cam-item">Junction: {user.id}</h4>
               <h5 className="cam-item">Video: {user.id}</h5>

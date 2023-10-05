@@ -8,20 +8,30 @@ const cameraAccessRouter = express.Router();
 
 
 // GET request to fetch camera access for a user
-cameraAccessRouter.get("/cameraAccess/:userId", (req, res) => {
-  const userId = req.params.userId;
-  const query = "SELECT cameraID FROM cameraAccess WHERE userID = ?";
+cameraAccessRouter.get("/api/cameraAccess/:userID", async (req, res) => {
+  let userId = req.params.userID;
 
-  databaseConnection.query(query, [userId], (error, results) => {
-    if (error) {
-      res
-        .status(500)
-        .json({ error: "An error occurred while fetching camera access." });
-    } else {
-      res.json(results);
+  const query = "SELECT cameraID FROM cameraAccess WHERE userID = ?";
+  let result;
+  console.log("a");
+
+  try {
+    console.log("b");
+    result = await databaseConnection.query(query, [userId]);
+    console.log(result);
+   } catch (e) {
+      res.status(400).send(JSON.stringify("An error occurred while fetching camera access"));
+      return;
     }
-  });
+    
+    res.json(result);
+    
 });
+
+
+
+ 
+
 
 // POST request to grant camera access to a user
 cameraAccessRouter.post("/cameraAccess/:userId/:cameraId", (req, res) => {
