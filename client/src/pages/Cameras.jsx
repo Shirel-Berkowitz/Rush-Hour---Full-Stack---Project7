@@ -10,6 +10,54 @@ const Cameras = () => {
     setUser(currentUser);
   }, []);
 
+  async function fetchData() {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/cameraAccessAPI/api/${user.id}`,
+      );
+      //Camera ID
+      const data = await response.json();
+      const camera = {id:data}
+       console.log("data");
+       console.log(data);
+
+
+  //     // Authentication successful
+  //     try {
+  //       const response = await fetch(
+  //         `http://localhost:3000/cameraAPI/api/${camera.id}`
+  //       );
+
+  //         const user = await response.json();
+  //         //  console.log("user");
+  //         //  console.log(user[0]);
+
+  //         const currentUser = {
+  //           id: user[0]["ID"],
+  //           name: user[0]["name"],
+  //           username: user[0]["username"],
+  //           userRank: user[0]["userRank"],
+  //         };
+  //         console.log("currentUser");
+  //         console.log(currentUser);
+  //         localStorage.setItem("currentUser", JSON.stringify(currentUser));
+  //         if (currentUser.userRank === "admin") {
+  //           navigate(`/Admin`);
+  //         } else {
+  //           navigate(`/Users`);
+  //         }
+  //       } catch (error) {
+  //         //           console.error(error);
+  //       }
+  //     } else {
+  //       // Authentication failed
+  //       alert("Username or password is incorrect");
+  //     }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <div className="info-container">
       <h1 className="cam-header">Cameras</h1>

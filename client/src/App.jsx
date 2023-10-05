@@ -8,7 +8,7 @@ import Register from "./pages/Register.jsx";
 import Users from "./pages/Users.jsx";
 import Info from "./pages/Info.jsx";
 import Cameras from "./pages/Cameras.jsx";
-import  Admin  from "./pages/Admin.jsx";
+import Admin from "./pages/Admin.jsx";
 
 function App() {
   return (
@@ -18,7 +18,8 @@ function App() {
         <Route path="/Register" element={<Register />} />
         <Route path="/" element={<Navigate to="/Login" />} />
         <Route path="Admin" element={<Admin />}>
-        <Route path=":id/Info" element={<Info />} />
+          <Route path=":id/Info" element={<Info />} />
+          <Route path=":id/Cameras" element={<Cameras />} />
         </Route>
         <Route path="Users" element={<Users />}>
           <Route path=":id/Info" element={<Info />} />

@@ -17,14 +17,12 @@ const Admin = () => {
           Logout
         </button>
       </Link>
-      <Link to="/Register"><button
-          className="logout-button">
-          Adding a new user
-        </button>
-        </Link>
+      <Link to="/Register">
+        <button className="logout-button">Adding a new user</button>
+      </Link>
       <nav className="user-navigation">
         <ul>
-          {/* <li>{<Link to={`/Admin/${user.id}/Cameras`}>Cameras</Link>}</li> */}
+          <li>{<Link to={`/Admin/${user.id}/Cameras`}>Cameras</Link>}</li>
           <li>{<Link to={`/Admin/${user.id}/Info`}>Info</Link>}</li>
         </ul>
       </nav>
