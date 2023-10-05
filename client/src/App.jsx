@@ -9,6 +9,7 @@ import Users from "./pages/Users.jsx";
 import Info from "./pages/Info.jsx";
 import Cameras from "./pages/Cameras.jsx";
 import Admin from "./pages/Admin.jsx";
+import VideoAnalysis from "./pages/VideoAnalysis.jsx";
 
 function App() {
   return (
@@ -20,10 +21,12 @@ function App() {
         <Route path="Admin" element={<Admin />}>
           <Route path=":id/Info" element={<Info />} />
           <Route path=":id/Cameras" element={<Cameras />} />
+          <Route path=":video/VideoAnalysis" element={<VideoAnalysis />} />
         </Route>
         <Route path="Users" element={<Users />}>
           <Route path=":id/Info" element={<Info />} />
           <Route path=":id/Cameras" element={<Cameras />} />
+          <Route path=":video/VideoAnalysis" element={<VideoAnalysis />} />
         </Route>
       </Routes>
     </BrowserRouter>

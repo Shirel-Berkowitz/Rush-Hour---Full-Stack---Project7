@@ -23,6 +23,9 @@ const Admin = () => {
       <nav className="user-navigation">
         <ul>
           <li>{<Link to={`/Admin/${user.id}/Cameras`}>Cameras</Link>}</li>
+          <li>
+            {<Link to={`/Admin/${user.id}/VideoAnalysis`}>Video analysis</Link>}
+          </li>
           <li>{<Link to={`/Admin/${user.id}/Info`}>Info</Link>}</li>
         </ul>
       </nav>
