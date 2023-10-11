@@ -40,6 +40,28 @@ cameraRouter.get("/cameras/:id", (req, res) => {
   });
 });
 
+cameraRouter.get("/api/cameraAccess/:cameraID", async (req, res) => {
+  let cameraID = req.params.cameraID;
+  console.log(cameraID);
+
+  const getCameraQuery = "SELECT * FROM cameras WHERE ID = ?";
+  let result;
+  console.log("a");
+
+  try {
+    console.log("b");
+    result = await databaseConnection.query(getCameraQuery, [cameraID]);
+    
+       
+   } catch (e) {
+      res.status(400).send(JSON.stringify("An error occurred while fetching camera access"));
+      return;
+    }
+    
+    res.json(result);
+    
+});
+
 // POST request to create a new camera
 cameraRouter.post("/cameras", (req, res) => {
   const { location, junction, video } = req.body;

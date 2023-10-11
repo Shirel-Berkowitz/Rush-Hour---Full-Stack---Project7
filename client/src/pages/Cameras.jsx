@@ -4,6 +4,8 @@ import React from "react";
 
 const Cameras = () => {
   const [user, setUser] = useState(null);
+  const [cameraIDs, setCameraIDs] = useState([]);
+
 
   useEffect(() => {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -17,9 +19,10 @@ const Cameras = () => {
       );
       //Camera ID
       const data = await response.json();
-      const camera = {id:data}
+      setCameraIDs(data.cameraIDs);
+      //const camera = { id: data.cameraID };
        console.log("data");
-       console.log(data);
+       console.log(data.cameraIDs);
 
 
   //     // Authentication successful

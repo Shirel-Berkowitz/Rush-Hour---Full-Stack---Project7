@@ -173,56 +173,51 @@ usersRouter.post("/api/users/login", async (req, res) => {
 });
 
 usersRouter.post("/api/users", async (req, res) => {
-  console.log("a");
   const user = {
     name: req.body.name,
     username: req.body.username,
     userRank: req.body.userRank,
   };
-  const getUserQuery = `INSERT INTO users (name, username, userRank ) VALUES (?, ?, ?)`;
+  const postUserQuery = `INSERT INTO users (name, username, userRank ) VALUES (?, ?, ?)`;
   let result;
-  console.log("b");
   console.log(user);
   try {
-    result = await databaseConnection.query(getUserQuery, [
+    result = await databaseConnection.query(postUserQuery, [
       user.name,
       user.username,
       user.userRank,
     ]);
-    console.log("c");
-    console.log("result");
     console.log(result);
   } catch (e) {
     res.status(400).send(JSON.stringify("Server error"));
-    console.log("d");
     return;
   }
-  //res.status(200);
   res.json(user);
 });
 
-usersRouter.post("/api/users/:username/password", async (req, res) => {
-  const password = {
-    username: req.params.username,
-    password: req.body.password,
-  };
-  const getUserQuery =
-    "INSERT INTO passwords (username, password) VALUES (?, ?)";
+usersRouter.post("/api/users/:userID/password", async (req, res) => {
+  const password =req.body.password; 
+  const userID =parseInt(req.params.userID);
+  console.log(password);
+  console.log(userID);
+    
+    
+  
+  const postPasswordQuery =
+    "INSERT INTO passwords (userID, password) VALUES (?, ?)";
   let result;
 
   try {
-    result = await databaseConnection.query(getUserQuery, [
-      password.username,
-      password.password,
-    ]);
+    result = await databaseConnection.query(postPasswordQuery, [userID, password]);
+    
     console.log("result");
     console.log(result);
   } catch (e) {
     res.status(400).send(JSON.stringify("error"));
     return;
   }
-  //res.status(200);
-  res.json(password);
+  
+  res.status(200).json('success');
 });
 
 ///GET///
@@ -241,6 +236,24 @@ usersRouter.get("/api/users/login/:username", async (req, res) => {
   }
 
   res.json(result[0]);
+});
+
+
+usersRouter.get("/api/users", async (req, res) => {
+  
+
+  const getUserQuery = "SELECT * FROM users ";
+  let result;
+
+  try {
+    result = await databaseConnection.query(getUserQuery);
+    console.log(result);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+
+  res.json(result);
 });
 
 // PUT request to update user details

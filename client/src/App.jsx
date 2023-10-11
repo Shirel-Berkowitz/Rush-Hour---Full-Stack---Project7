@@ -26,7 +26,7 @@ function App() {
         <Route path="Users" element={<Users />}>
           <Route path=":id/Info" element={<Info />} />
           <Route path=":id/Cameras" element={<Cameras />} />
-          <Route path=":video/VideoAnalysis" element={<VideoAnalysis />} />
+          <Route path=":userID/:cameraID/VideoAnalysis" element={<VideoAnalysis />} />
         </Route>
       </Routes>
     </BrowserRouter>

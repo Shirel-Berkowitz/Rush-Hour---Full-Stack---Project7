@@ -32,27 +32,34 @@ const Register = () => {
       console.log(data);
       //console.log(data[0]);
 
-      const password = {
-        username: inputs.username,
-        password: inputs.password,
-      };
+      const password = inputs.password;
       console.log("password");
       console.log(password);
       
 
+      const userResponse = await fetch(
+        `http://localhost:3000/userAPI/api/users/login/${inputs.username}`,
+       
+      );
+
+      const userData = await userResponse.json();
+      console.log(userData);
+      console.log(userData[0].ID);
+
       const passwordResponse = await fetch(
-        `http://localhost:3000/userAPI/api/users/${inputs.username}/password`,
+        `http://localhost:3000/userAPI/api/users/${userData[0].ID}/password`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(password),
+          body: JSON.stringify({password: password}),
         }
       );
 
       const passwordData = await passwordResponse.json();
       console.log(passwordData);
+
       
       navigate(`/Admin`);
       alert("The addition of the user has been recorded in the system");
