@@ -1,8 +1,34 @@
 
 const express = require("express");
-const databaseConnection = require("./index.js"); // Import your database connection object
+const { databaseConnection } = require("./connectionDB.js"); // Import your database connection object
 
 const passwordRouter = express.Router();
+
+///POST///
+passwordRouter.post("/api/users/:userID/password", async (req, res) => {
+    const password =req.body.password; 
+    const userID =parseInt(req.params.userID);
+    console.log(password);
+    console.log(userID);
+      
+      
+    
+    const postPasswordQuery =
+      "INSERT INTO passwords (userID, password) VALUES (?, ?)";
+    let result;
+  
+    try {
+      result = await databaseConnection.query(postPasswordQuery, [userID, password]);
+      
+      console.log("result");
+      console.log(result);
+    } catch (e) {
+      res.status(400).send(JSON.stringify("error"));
+      return;
+    }
+    
+    res.status(200).json('success');
+  });
 
 
 

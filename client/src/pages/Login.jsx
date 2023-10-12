@@ -56,7 +56,7 @@ export default function Login(){
         
         // Authentication successful
          try{
-           const response = await fetch(`http://localhost:3000/userAPI/api/users/login/${inputsName.username}`);
+           const response = await fetch(`http://localhost:3000/userAPI/api/users/${inputsName.username}`);
 
            const user = await response.json();
           //  console.log("user");

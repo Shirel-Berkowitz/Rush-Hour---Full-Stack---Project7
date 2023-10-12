@@ -4,96 +4,7 @@ const { databaseConnection } = require("./connectionDB.js"); // Import your data
 
 const usersRouter = express.Router();
 
-// Middleware to parse JSON request bodies
-// app.use(express.json());
 
-// GET request to fetch a user by ID
-// usersRouter.get("/api/users/:id", (req, res) => {
-//   console.log("3");
-//   const userId = req.params.id;
-//   const query = "SELECT * FROM users WHERE ID = ?";
-
-//   databaseConnection.query(query, [userId], (error, results) => {
-//     if (error) {
-//       res.status(500).json({ error: "An error occurred while fetching the user." });
-//     } else {
-//       if (results.length === 0) {
-//         res.status(404).json({ error: "User not found." });
-//       } else {
-//         res.json(results[0]);
-//       }
-//     }
-//   });
-// });
-
-// GET request to fetch a user's name by ID
-// usersRouter.get("/api/users/:id/name", (req, res) => {
-//   const userId = req.params.id;
-//   console.log("4");
-//   const query = "SELECT name FROM users WHERE ID = ?";
-
-//   databaseConnection.query(query, [userId], (error, results) => {
-//     if (error) {
-//       res.status(500).json({ error: "An error occurred while fetching the user's name." });
-//     } else {
-//       if (results.length === 0) {
-//         res.status(404).json({ error: "User not found." });
-//       } else {
-//         res.json(results[0].name);
-//       }
-//     }
-//   });
-// });
-
-// usersRouter.get("/api/users/:username/name", (req, res) => {
-//   console.log("5");
-//   const userId = req.params.id;
-//   const query = "SELECT name FROM users WHERE username = ?";
-
-//   databaseConnection.query(query, [username], (error, results) => {
-//     if (error) {
-//       res.status(500).json({ error: "An error occurred while fetching the user's name." });
-//     } else {
-//       if (results.length === 0) {
-//         res.status(404).json({ error: "User not found." });
-//       } else {
-//         res.json(results[0].name);
-//       }
-//     }
-//   });
-// });
-// GET request to fetch passwords by username
-// usersRouter.get("/api/users/:username/password", (req, res) => {
-//   console.log("6");
-//   const username = req.params.username;
-
-//   // First, find the user ID based on the username
-//   const userIdQuery = "SELECT id FROM users WHERE username = ?";
-//   databaseConnection.query(userIdQuery, [username], (userIdError, userIdResults) => {
-//     if (userIdError) {
-//       res.status(500).json({ error: "An error occurred while fetching user ID." });
-//     } else {
-//       if (userIdResults.length === 0) {
-//         res.status(404).json({ message: "User not found." });
-//       } else {
-//         const userId = userIdResults[0].id;
-
-//         // Now that we have the user ID, fetch passwords based on that ID
-//         const passwordQuery = "SELECT password FROM passwords WHERE userID = ?";
-//         databaseConnection.query(passwordQuery, [userId], (passwordError, passwordResults) => {
-//           if (passwordError) {
-//             res.status(500).json({ error: "An error occurred while fetching passwords." });
-//           } else {
-//             if (passwordResults.length === 0) {
-//               res.status(404).json({ message: "Passwords not found for the user." });
-//             } else {
-//               res.json(passwordResults);
-//             }
-//           }
-//         });
-//       }
-//     }
-//   });
 
 ///POST///
 usersRouter.post("/api/users/login", async (req, res) => {
@@ -195,33 +106,10 @@ usersRouter.post("/api/users", async (req, res) => {
   res.json(user);
 });
 
-usersRouter.post("/api/users/:userID/password", async (req, res) => {
-  const password =req.body.password; 
-  const userID =parseInt(req.params.userID);
-  console.log(password);
-  console.log(userID);
-    
-    
-  
-  const postPasswordQuery =
-    "INSERT INTO passwords (userID, password) VALUES (?, ?)";
-  let result;
 
-  try {
-    result = await databaseConnection.query(postPasswordQuery, [userID, password]);
-    
-    console.log("result");
-    console.log(result);
-  } catch (e) {
-    res.status(400).send(JSON.stringify("error"));
-    return;
-  }
-  
-  res.status(200).json('success');
-});
 
 ///GET///
-usersRouter.get("/api/users/login/:username", async (req, res) => {
+usersRouter.get("/api/users/:username", async (req, res) => {
   let username = req.params.username;
 
   const getUserQuery = "SELECT * FROM users WHERE username = ?";
@@ -256,44 +144,122 @@ usersRouter.get("/api/users", async (req, res) => {
   res.json(result);
 });
 
-// PUT request to update user details
-// usersRouter.put("/api/users/:id", (req, res) => {
-//   console.log("8");
-//     const userId = req.params.id;
-//     const { username, name, userRank } = req.body;
-//     const query =
-//       "UPDATE users SET username = ?, name = ?, userRank = ? WHERE ID = ?";
+usersRouter.get("/api/users/:userRank", async (req, res) => {
+  let userRank = req.params.userRank;
+  
 
-//     databaseConnection.query(
-//       query,
-//       [username, name, userRank, userId],
-//       (error, results) => {
-//         if (error) {
-//           res
-//             .status(500)
-//             .json({ error: "An error occurred while updating the user." });
-//         } else {
-//           res.json({ message: "User updated successfully." });
-//         }
-//       }
-//     );
-//   });
+  const getUserQuery = "SELECT * FROM users WHERE userRank = ? ";
+  let result;
 
-// DELETE request to delete a user
-// usersRouter.delete("/api/users/:id", (req, res) => {
-//   console.log("9");
-//   const userId = req.params.id;
-//   const query = "DELETE FROM users WHERE ID = ?";
+  try {
+    result = await databaseConnection.query(getUserQuery, [userRank]);
+    console.log(result);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
 
-//   databaseConnection.query(query, [userId], (error, results) => {
-//     if (error) {
-//       res
-//         .status(500)
-//         .json({ error: "An error occurred while deleting the user." });
-//     } else {
-//       res.json({ message: "User deleted successfully." });
-//     }
-//   });
-// });
+  res.json(result);
+});
+
+
+
+
+
+///PUT///
+usersRouter.put("/api/users/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const { name, username ,userRank } = req.body;
+
+  let sql = `UPDATE users SET`;
+  const values = [];
+
+  if (name !== undefined) {
+    sql += ` name = ?,`;
+    values.push(name);
+  }
+
+  if (username !== undefined) {
+    sql += ` username = ?,`;
+    values.push(username);
+  }
+  if (userRank !== undefined) {
+    sql += ` userRank = ?,`;
+    values.push(userRank);
+  }
+  // Remove the trailing comma from the SQL statement
+  sql = sql.slice(0, -1);
+
+  sql += ` WHERE ID = ?`;
+  values.push(id);
+
+  // Execute the SQL update query
+  try {
+    await databaseConnection.query(sql, values);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+
+  // Fetch the updated user data after the update
+  const getUserQuery = "SELECT * FROM users WHERE ID = ?";
+  let result;
+
+  try {
+    result = await databaseConnection.query(getUserQuery, [id]);
+    console.log(result);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+
+  res.json(result[0]);
+
+});
+
+///DELETE/// 
+usersRouter.delete("/api/users/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  
+
+  const deletPassQuery = "DELETE FROM passwords WHERE userID = ? ";
+  let deletePassResult;
+
+  try {
+    deletePassResult = await databaseConnection.query(deletPassQuery, [id]);
+    console.log(deletePassResult);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+  const getUserQuery = "SELECT * FROM users WHERE ID = ? ";
+  let deleteUser;
+  let selectResults;
+
+  try {
+    selectResults = await databaseConnection.query(getUserQuery, [id]);
+    console.log(selectResults);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+  deleteUser= selectResults[0];
+
+  const deletUserQuery = "DELETE FROM users WHERE ID = ? ";
+  let deleteUserResult;
+  try {
+    deleteUserResult = await databaseConnection.query(deletUserQuery, [id]);
+    console.log(deletePassResult);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+  
+  res.json(deleteUser);
+
+
+});
+
+
 
 module.exports = usersRouter;

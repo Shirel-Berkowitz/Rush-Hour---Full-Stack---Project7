@@ -33,12 +33,12 @@ const Register = () => {
       //console.log(data[0]);
 
       const password = inputs.password;
-      console.log("password");
-      console.log(password);
+      // console.log("password");
+      // console.log(password);
       
 
       const userResponse = await fetch(
-        `http://localhost:3000/userAPI/api/users/login/${inputs.username}`,
+        `http://localhost:3000/userAPI/api/users/${inputs.username}`,
        
       );
 
@@ -94,28 +94,7 @@ const Register = () => {
             required
           />
         </div>
-        {/* <div className="form-group">
-          <label htmlFor="username">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={inputs.email || ""}
-            onChange={handleChange}
-            required
-          />
-        </div> */}
-        {/* <div className="form-group">
-          <label htmlFor="username">Phone:</label>
-          <input
-            type="text"
-            id="phone"
-            name="phone"
-            value={inputs.phone || ""}
-            onChange={handleChange}
-            required
-          />
-        </div> */}
+        
 
 <div className="form-group">
           <label htmlFor="username">Username:</label>

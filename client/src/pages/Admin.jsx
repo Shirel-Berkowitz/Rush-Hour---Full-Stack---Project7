@@ -20,11 +20,15 @@ const Admin = () => {
       <Link to="/Register">
         <button className="logout-button">Adding a new user</button>
       </Link>
+      <Link to="/UserList">
+        <button className="logout-button"> Users List</button>
+      </Link>
+      
       <nav className="user-navigation">
         <ul>
           <li>{<Link to={`/Admin/${user.id}/Cameras`}>Cameras</Link>}</li>
           <li>
-            {<Link to={`/Admin/${user.id}/VideoAnalysis`}>Video analysis</Link>}
+            {/* {<Link to={`/Admin/${user.id}/VideoAnalysis`}>Video analysis</Link>} */}
           </li>
           <li>{<Link to={`/Admin/${user.id}/Info`}>Info</Link>}</li>
         </ul>
