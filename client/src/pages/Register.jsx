@@ -16,8 +16,7 @@ const Register = () => {
       username: inputs.username,
       userRank: inputs.userRank,
     };
-    console.log("1");
-
+    
 
     try {
       const response = await fetch(`http://localhost:3000/userAPI/api/users`, {

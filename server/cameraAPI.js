@@ -40,7 +40,7 @@ cameraRouter.get("/api/camera/:ID", async (req, res) => {
     res.status(400).send(JSON.stringify("An error occurred while fetching camera access"));
     
   }
-  res.json(result);
+  res.json(result[0]);
 });
 
 ///DELETE/// 
@@ -48,7 +48,7 @@ cameraRouter.delete("/api/cameras/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   
 
-  const deletCamQuery = "DELETE FROM cameraAccess WHERE userID = ? ";
+  const deletCamQuery = "DELETE FROM cameraAccess WHERE cameraID = ? ";
   let deleteCamResult;
 
   try {
@@ -160,44 +160,37 @@ cameraRouter.put("/api/cameras/:id", async (req, res) => {
 //     }
 //   );
 // });
+cameraRouter.post("/api/cameras", async (req, res) => {
+  const camera = {
+    location: req.body.location,
+    junction: req.body.junction,
+    video: req.body.video,
+  };
+  const postCameraQuery = `INSERT INTO cameras (location, junction, video) VALUES (?, ?, ?)`;
+  let result;
+  console.log("camera");
+  console.log(camera);
+  try {
+    result = await databaseConnection.query(postCameraQuery, [
+      camera.location,
+      camera.junction,
+      camera.video,
+    ]);
+    const newCameraId = result.insertId; // תחזיר את המזהה שנוצר
+    console.log("result");
+    console.log(result);
+    const newCamera = { ...camera, ID: newCameraId }; // הוסף את המזהה למופע המצלמה
+    res.json(newCamera); // החזר את המצלמה עם המזהה ללקוח
+  } catch (e) {
+    res.status(400).send(JSON.stringify("Server error"));
+    return;
+  }
+});
 
-// PUT request to update camera details
-// cameraRouter.put("/cameras/:id", (req, res) => {
-//   const cameraId = req.params.id;
-//   const { location, junction, video } = req.body;
-//   const query =
-//     "UPDATE cameras SET location = ?, junction = ?, video = ? WHERE ID = ?";
 
-//   databaseConnection.query(
-//     query,
-//     [location, junction, video, cameraId],
-//     (error, results) => {
-//       if (error) {
-//         res
-//           .status(500)
-//           .json({ error: "An error occurred while updating the camera." });
-//       } else {
-//         res.json({ message: "Camera updated successfully." });
-//       }
-//     }
-//   );
-// });
 
-// DELETE request to delete a camera
-// cameraRouter.delete("/cameras/:id", (req, res) => {
-//   const cameraId = req.params.id;
-//   const query = "DELETE FROM cameras WHERE ID = ?";
 
-//   databaseConnection.query(query, [cameraId], (error, results) => {
-//     if (error) {
-//       res
-//         .status(500)
-//         .json({ error: "An error occurred while deleting the camera." });
-//     } else {
-//       res.json({ message: "Camera deleted successfully." });
-//     }
-//   });
-// });
+
 
 module.exports = cameraRouter;
 
