@@ -80,7 +80,7 @@ const UserList = () => {
 
   return (
     <div className="users-container">
-      <h1 className="user-name">welcome admin {user1.name}</h1>
+      
       <Link to="/Login">
         <button
           className="logout-button"

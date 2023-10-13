@@ -7,6 +7,23 @@ const cameraRouter = express.Router();
 
 
 ///GET///
+cameraRouter.get("/api/cameras", async (req, res) => {
+  
+
+  const getCameraQuery = "SELECT * FROM cameras ";
+  let result;
+
+  try {
+    result = await databaseConnection.query(getCameraQuery);
+    console.log(result);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+
+  res.json(result);
+});
+
 cameraRouter.get("/api/camera/:ID", async (req, res) => {
   let cameraID = parseInt(req.params.ID);
 
@@ -26,63 +43,99 @@ cameraRouter.get("/api/camera/:ID", async (req, res) => {
   res.json(result);
 });
 
+///DELETE/// 
+cameraRouter.delete("/api/cameras/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  
+
+  const deletCamQuery = "DELETE FROM cameraAccess WHERE userID = ? ";
+  let deleteCamResult;
+
+  try {
+    deleteCamResult = await databaseConnection.query(deletCamQuery, [id]);
+    console.log(deleteCamResult);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+  const getCamQuery = "SELECT * FROM cameras WHERE ID = ? ";
+  let deleteCamera;
+  let selectResults;
+
+  try {
+    selectResults = await databaseConnection.query(getCamQuery, [id]);
+    console.log(selectResults);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+  deleteCamera= selectResults[0];
+
+  const deletCameraQuery = "DELETE FROM cameras WHERE ID = ? ";
+  let deleteCameraResult;
+  try {
+    deleteCameraResult = await databaseConnection.query(deletCameraQuery, [id]);
+    console.log(deleteCameraResult);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+  
+  res.json(deleteCamera);
 
 
-// GET request to fetch all cameras
-//api/camera/${camera.cameraID}
-// cameraRouter.get("/cameras", (req, res) => {
-//   databaseConnection.query("SELECT * FROM cameras", (error, results) => {
-//     if (error) {
-//       res
-//         .status(500)
-//         .json({ error: "An error occurred while fetching cameras." });
-//     } else {
-//       res.json(results);
-//     }
-//   });
-// });
+});
 
-// GET request to fetch a camera by ID
-// cameraRouter.get("/cameras/:id", (req, res) => {
-//   const cameraId = req.params.id;
-//   const query = "SELECT * FROM cameras WHERE ID = ?";
+///PUT///
+cameraRouter.put("/api/cameras/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const { location, junction ,video } = req.body;
 
-//   databaseConnection.query(query, [cameraId], (error, results) => {
-//     if (error) {
-//       res
-//         .status(500)
-//         .json({ error: "An error occurred while fetching the camera." });
-//     } else {
-//       if (results.length === 0) {
-//         res.status(404).json({ message: "Camera not found." });
-//       } else {
-//         res.json(results[0]);
-//       }
-//     }
-//   });
-// });
+  let sql = `UPDATE cameras SET`;
+  const values = [];
 
-// cameraRouter.get("/api/cameraAccess/:cameraID", async (req, res) => {
-//   let cameraID = req.params.cameraID;
-//   console.log(cameraID);
+  if (location !== undefined) {
+    sql += ` location = ?,`;
+    values.push(location);
+  }
 
-//   const getCameraQuery = "SELECT * FROM cameras WHERE ID = ?";
-//   let result;
-//   console.log("a");
+  if (junction !== undefined) {
+    sql += ` junction = ?,`;
+    values.push(junction);
+  }
+  if (video !== undefined) {
+    sql += ` video = ?,`;
+    values.push(video);
+  }
+  // Remove the trailing comma from the SQL statement
+  sql = sql.slice(0, -1);
 
-//   try {
-//     console.log("b");
-//     result = await databaseConnection.query(getCameraQuery, [cameraID]);
-    
-       
-//    } catch (e) {
-//       res.status(400).send(JSON.stringify("An error occurred while fetching camera access"));
-//       return;
-//     }
-    
-//     res.json(result);
-    
-// });
+  sql += ` WHERE ID = ?`;
+  values.push(id);
+
+  // Execute the SQL update query
+  try {
+    await databaseConnection.query(sql, values);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+
+  // Fetch the updated user data after the update
+  const getCameraQuery = "SELECT * FROM cameras WHERE ID = ?";
+  let result;
+
+  try {
+    result = await databaseConnection.query(getCameraQuery, [id]);
+    console.log(result);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+
+  res.json(result[0]);
+
+});
 
 // POST request to create a new camera
 // cameraRouter.post("/cameras", (req, res) => {

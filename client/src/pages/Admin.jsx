@@ -17,16 +17,29 @@ const Admin = () => {
           Logout
         </button>
       </Link>
-      <Link to="/Register">
-        <button className="logout-button">Adding a new user</button>
-      </Link>
-      <Link to="/UserList">
-        <button className="logout-button"> Users List</button>
-      </Link>
+      
+      <Link to={`/Admin/${user.id}/Register`}>
+
+               <button>
+               Adding a new user
+               </button>
+             </Link>
+      <Link to={`/Admin/${user.id}/UserList`}>
+
+            <button>
+            Users List
+            </button>
+         </Link>
+         <Link to={`/Admin/${user.id}/camerasList`}>
+
+            <button>
+            cameras List
+            </button>
+         </Link>
       
       <nav className="user-navigation">
         <ul>
-          <li>{<Link to={`/Admin/${user.id}/Cameras`}>Cameras</Link>}</li>
+          <li>{<Link to={`/Admin/${user.id}/CamerasAdmin`}>Cameras</Link>}</li>
           <li>
             {/* {<Link to={`/Admin/${user.id}/VideoAnalysis`}>Video analysis</Link>} */}
           </li>

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import React from "react";
 
-const Cameras = () => {
+const CamerasUser = () => {
   const user = JSON.parse(localStorage.getItem("currentUser"));
   
   //const [user, setUser] = useState(null);
@@ -49,12 +49,14 @@ const Cameras = () => {
           <ul>
           {cameras.map((camera) => (
              <li key={camera.cameraID}>
-             <Link to={`/Admin/${user.id}/Cameras/${camera.cameraID}/VideoAnalysis`}>
+              
+             <Link to={`/Users/${user.id}/CamerasUser/${camera.cameraID}/VideoAnalysis`}>
 
                <button>
                  camera: {camera.cameraID}
                </button>
              </Link>
+
            </li>
           ))}
         </ul>
@@ -65,4 +67,4 @@ const Cameras = () => {
   );
 };
 
-export default Cameras;
+export default CamerasUser;
