@@ -81,16 +81,7 @@ const UserList = () => {
   return (
     <div className="users-container">
       
-      <Link to="/Login">
-        <button
-          className="logout-button"
-          onClick={() => {
-            localStorage.removeItem("currentUser");
-          }}
-        >
-          Logout
-        </button>
-      </Link>
+      
       <Link to="/Admin">
         <button className="logout-button">Back</button>
       </Link>
