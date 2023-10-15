@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-
-
 const Register = () => {
   const [inputs, setInputs] = useState({});
   const navigate = useNavigate();
@@ -18,7 +16,6 @@ const Register = () => {
       username: inputs.username,
       userRank: inputs.userRank,
     };
-    
 
     try {
       const response = await fetch(`http://localhost:3000/userAPI/api/users`, {
@@ -36,11 +33,9 @@ const Register = () => {
       const password = inputs.password;
       // console.log("password");
       // console.log(password);
-      
 
       const userResponse = await fetch(
-        `http://localhost:3000/userAPI/api/users/${inputs.username}`,
-       
+        `http://localhost:3000/userAPI/api/users/${inputs.username}`
       );
 
       const userData = await userResponse.json();
@@ -54,19 +49,13 @@ const Register = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({password: password}),
+          body: JSON.stringify({ password: password }),
         }
       );
 
       const passwordData = await passwordResponse.json();
       console.log(passwordData);
 
-      
-
-
-
-
-      
       navigate(`/Admin`);
       alert("The addition of the user has been recorded in the system");
     } catch (error) {
@@ -84,14 +73,14 @@ const Register = () => {
     fetchData();
   };
 
-
   return (
     <div className="background1">
       <form onSubmit={handleSubmit}>
         <h1>Sign up</h1>
         <div className="form-group">
-          <label htmlFor="name">Name:</label>
+          <label htmlFor="name">Name: </label>
           <input
+            className="input-group"
             type="text"
             id="name"
             name="name"
@@ -100,11 +89,11 @@ const Register = () => {
             required
           />
         </div>
-        
 
-<div className="form-group">
-          <label htmlFor="username">Username:</label>
+        <div className="form-group">
+          <label htmlFor="username">Username: </label>
           <input
+            className="input-group"
             type="text"
             id="username"
             name="username"
@@ -113,10 +102,11 @@ const Register = () => {
             required
           />
         </div>
-        
+
         <div className="form-group">
-          <label htmlFor="rank">Rank:</label>
+          <label htmlFor="rank">Rank: </label>
           <input
+            className="input-group"
             type="text"
             id="rank"
             name="userRank"
@@ -125,11 +115,11 @@ const Register = () => {
             required
           />
         </div>
-        
-       
+
         <div className="form-group">
-          <label htmlFor="password">Password:</label>
+          <label htmlFor="password">Password: </label>
           <input
+            className="input-group"
             type="password"
             id="password"
             name="password"
@@ -139,8 +129,9 @@ const Register = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="password">Validation Password:</label>
+          <label htmlFor="password">Varify Password: </label>
           <input
+            className="input-group"
             type="password"
             id="validationPassword"
             name="validationPassword"
@@ -206,10 +197,10 @@ export default Register;
 //       return;
 //     }
 //     fetchData();
-    
+
 //     // שולחים את המייל בסוף הפעולה
 //     sendEmail(inputs.email, "Your user information", `Hello, this is your username: ${inputs.username} and password: ${inputs.password}`);
-    
+
 //     navigate(`/Admin`);
 //     alert("The addition of the user has been recorded in the system");
 //   };

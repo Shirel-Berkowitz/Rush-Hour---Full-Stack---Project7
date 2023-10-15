@@ -60,13 +60,16 @@ div .postDiv {
 }
 
 .usersList,
-.camerasList {
+.camerasList,
+.camerasAccessList {
   text-align: left;
+  padding-left: 100px;
 }
 
 .password-btn,
 .edit-btn,
-.delete-btn {
+.delete-btn,
+.add-btn {
   /* background: none;
   border: none; */
   padding: 5px;
@@ -77,6 +80,24 @@ div .postDiv {
 }
 
 .UserDetails,
-.cameraDetails {
+.cameraDetails,
+.cameraAccessDetails {
   display: inline;
 }
+
+.form-group {
+  text-align: left;
+  padding-left: 250px;
+  padding-right: 250px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.form-group input {
+  flex: 1;
+}
+
+/* .input-group {
+  text-align: left;
+  padding-right: 20%;
+} */

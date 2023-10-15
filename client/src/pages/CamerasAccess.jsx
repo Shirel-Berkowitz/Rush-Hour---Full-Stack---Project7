@@ -8,7 +8,7 @@
 
 //   const [cameras, setCameras] = useState([]);
 // //   const [updatedCamera, setUpdatedCamera] = useState({
-// //     ID: null, 
+// //     ID: null,
 // //     location: "",
 // //     junction: "",
 // //     video: "",
@@ -29,7 +29,6 @@
 //   useEffect(() => {
 //     async function fetchCameras() {
 
-        
 //       try {
 //         const response = await fetch(`http://localhost:3000/cameraAPI/api/cameras`);
 //         const data = await response.json();
@@ -53,26 +52,24 @@
 // //     }
 // //   };
 
-
-// //   
+// //
 
 //     const handleAddPermission = async (cameraId) => {
 
 //         const username = inputs.username;
 
 //       try {
-        
 
 //          const userResponse = await fetch(
 //        `http://localhost:3000/userAPI/api/users/${inputs.username}`,
-   
+
 //         );
 
 //        const userData = await userResponse.json();
 //        console.log(userData);
 //        console.log(userData[0].ID)
 //        const userID = userData[0].ID;
-  
+
 //         const response = await fetch(`http://localhost:3000/cameraAccessAPI/api/cameraAccess/${userData[0].ID}/${cameraId}`, {
 //           method: "POST",
 //           headers: {
@@ -80,13 +77,12 @@
 //           },
 //           body: JSON.stringify({userID: userID}),
 //         });
-  
+
 //         if (response.ok) {
 //           // הוספת המצלמה החדשה לרשימת המצלמות
 //           const addCameraAccess = await response.json();
 //           console.log(addCameraAccess);
 
-          
 //           //setCameras((prevCameras) => [...prevCameras, addedCamera]);
 //           //setIsAdding(false);
 //         } else {
@@ -96,19 +92,17 @@
 //         console.error("Error:", error);
 //       }
 //     };
-  
 
 //   return (
 //     <div className="users-container">
-      
-     
+
 //       <Link to="/Admin">
 //         <button className="logout-button">Back</button>
 //       </Link>
 //       <div>
 //         <h1>Access Permissions</h1>
 //         {/* <button onClick={toggleAddCamera}>Add New Camera</button>
-        
+
 //         {isAdding && ( // הצגת הפופאפ להוספת מצלמה
 //            <div>
 //              <h2>Add Camera</h2>
@@ -142,7 +136,7 @@
 //         <ul>
 //           {cameras.map((camera) => (
 //             <li key={camera.ID}>
-//               location: {camera.location} 
+//               location: {camera.location}
 //               <button onClick={() => handleAddPermission(camera.ID)}>Add Permission</button>
 //               {/* <button onClick={() => handleDeletePermission(camera)}>Delete Permission</button> */}
 //             </li>
@@ -189,6 +183,13 @@
 import { Outlet, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import React from "react";
+import {
+  faTrashCan,
+  faPlus,
+  faCommentDots,
+  faPenToSquare,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../App.css";
 
 const CamerasAccess = () => {
@@ -209,7 +210,9 @@ const CamerasAccess = () => {
   useEffect(() => {
     async function fetchCameras() {
       try {
-        const response = await fetch(`http://localhost:3000/cameraAPI/api/cameras`);
+        const response = await fetch(
+          `http://localhost:3000/cameraAPI/api/cameras`
+        );
         const data = await response.json();
         setCameras(data[0]);
       } catch (error) {
@@ -235,19 +238,22 @@ const CamerasAccess = () => {
     if (activeCamera) {
       try {
         const userResponse = await fetch(
-          `http://localhost:3000/userAPI/api/users/${username}`,
+          `http://localhost:3000/userAPI/api/users/${username}`
         );
 
         const userData = await userResponse.json();
         const userID = userData[0].ID;
 
-        const response = await fetch(`http://localhost:3000/cameraAccessAPI/api/cameraAccess/${userData[0].ID}/${activeCamera.ID}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userID: userID }),
-        });
+        const response = await fetch(
+          `http://localhost:3000/cameraAccessAPI/api/cameraAccess/${userData[0].ID}/${activeCamera.ID}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userID: userID }),
+          }
+        );
 
         if (response.ok) {
           const addCameraAccess = await response.json();
@@ -276,52 +282,52 @@ const CamerasAccess = () => {
 
   const handleSendPermissionDelete = async () => {
     if (activeCamera) {
+      try {
+        const cameraAccessResponse = await fetch(
+          `http://localhost:3000/cameraAccessAPI/api/cameraAccess/${activeCamera.ID}`
+        );
+
+        const userData = await cameraAccessResponse.json();
+        const userID = userData[0].ID;
+        console.log(userID);
+
+        const userResponse = await fetch(
+          `http://localhost:3000/userAPI/api/users/${userID}`
+        );
+
+        const user = await userResponse.json();
+        //const userID = userData[0].ID;
+        console.log(user);
+
         try {
-          const cameraAccessResponse = await fetch(
-            `http://localhost:3000/cameraAccessAPI/api/cameraAccess/${activeCamera.ID}`,
+          await fetch(
+            `http://localhost:3000/cameraAccessAPI/api/cameraAccess/${userID}`,
+            {
+              method: "DELETE",
+            }
           );
-  
-          const userData = await cameraAccessResponse.json();
-          const userID = userData[0].ID;
-          console.log(userID);
 
-          const userResponse = await fetch(
-            `http://localhost:3000/userAPI/api/users/${userID}`,
+          setCameras((prevCamera) =>
+            prevCamera.filter((camera) => camera.ID !== id)
           );
-  
-          const user = await userResponse.json();
-          //const userID = userData[0].ID;
-          console.log(user);
-  
-
-          try {
-                  await fetch(`http://localhost:3000/cameraAccessAPI/api/cameraAccess/${userID}`, {
-                    method: "DELETE",
-                  });
-            
-                  setCameras((prevCamera) => prevCamera.filter((camera) => camera.ID !== id));
-                } catch (error) {
-                  console.error("Error:", error);
-                }
-  
-           if (response.ok) {
-            const deleteCameraAccess = await response.json();
-            console.log(deleteCameraAccess);
-            setActiveCamera(null);
-            setIsDeleteingPermission(false);
-            alert("The permission has been successfully deleted");
-          } else {
-            console.error("Failed to delete a new CameraAccess");
-          }
         } catch (error) {
           console.error("Error:", error);
         }
-    
+
+        if (response.ok) {
+          const deleteCameraAccess = await response.json();
+          console.log(deleteCameraAccess);
+          setActiveCamera(null);
+          setIsDeleteingPermission(false);
+          alert("The permission has been successfully deleted");
+        } else {
+          console.error("Failed to delete a new CameraAccess");
+        }
+      } catch (error) {
+        console.error("Error:", error);
       }
-    };
-    
-         
-       
+    }
+  };
 
   return (
     <div className="users-container">
@@ -330,46 +336,55 @@ const CamerasAccess = () => {
       </Link>
       <div>
         <h1>Access Permissions</h1>
-        <ul>
+        <ul className="camerasAccessList">
           {cameras.map((camera) => (
             <li key={camera.ID}>
-              location: {camera.location}
-              <button onClick={() => handleAddPermission(camera)}>
+              <button
+                className="delete-btn"
+                onClick={() => handleAddPermission(camera)}
+              >
                 {activeCamera && activeCamera.ID === camera.ID
                   ? "Close Permission"
-                  : "Add Permission"}
+                  : ""}
+                <FontAwesomeIcon icon={faPlus} />
+                {/* Add Permission */}
               </button>
-              {activeCamera && activeCamera.ID === camera.ID && isAddingPermission && (
-                <div>
-                  <div>Enter the username for access:</div>
-                  <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    value={inputs.username || ""}
-                    onChange={handleChange}
-                    required
-                  />
-                  <button onClick={handleSendPermission}>Send</button>
-                </div>
-              )}
-              <button onClick={() => handleDeletePermission(camera)}>
+              {activeCamera &&
+                activeCamera.ID === camera.ID &&
+                isAddingPermission && (
+                  <div>
+                    <div>Enter the username for access:</div>
+                    <input
+                      type="text"
+                      id="username"
+                      name="username"
+                      value={inputs.username || ""}
+                      onChange={handleChange}
+                      required
+                    />
+                    <button onClick={handleSendPermission}>Send</button>
+                  </div>
+                )}
+              <button
+                className="delete-btn"
+                onClick={() => handleDeletePermission(camera)}
+              >
                 {activeCamera && activeCamera.ID === camera.ID
                   ? "Close Permission"
-                  : "Delete Permission"}
+                  : ""}
+                <FontAwesomeIcon icon={faTrashCan} />
               </button>
-              {activeCamera && activeCamera.ID === camera.ID && isAddingPermission && (
-                <div>
-                  {cameras.map((user) => (
-             <li key={user.username}>
-
-
-           </li>
-          ))}
-                  <button onClick={handleSendPermission}>Send</button>
-                </div>
-              )}
-              
+              <h4 className="cameraAccessDetails"> location: </h4>{camera.location}
+              {activeCamera &&
+                activeCamera.ID === camera.ID &&
+                isAddingPermission && (
+                  <div>
+                    {cameras.map((user) => (
+                      <li key={user.username}></li>
+                    ))}
+                    <button onClick={handleSendPermission}>Send</button>
+                  </div>
+                )}
             </li>
           ))}
         </ul>

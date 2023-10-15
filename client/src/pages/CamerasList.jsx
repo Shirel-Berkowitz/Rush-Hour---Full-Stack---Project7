@@ -404,7 +404,7 @@ const CamerasList = () => {
           {cameras.map((camera) => (
             <li key={camera.ID}>
               <button
-                className="delete-btn"
+                className="add-btn"
                 onClick={() => handleDeleteCamera(camera.ID)}
               >
                 <FontAwesomeIcon icon={faTrashCan} />
