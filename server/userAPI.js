@@ -229,7 +229,17 @@ usersRouter.delete("/api/users/:id", async (req, res) => {
     deletePassResult = await databaseConnection.query(deletPassQuery, [id]);
     console.log(deletePassResult);
   } catch (e) {
-    res.status(400).send(JSON.stringify("error"));
+    res.status(400).send(JSON.stringify("error 1"));
+    return;
+  }
+  const deletCamAccQuery = "DELETE FROM cameraAccess WHERE userID  = ? ";
+  let deleteCamAccResult;
+
+  try {
+    deleteCamAccResult = await databaseConnection.query(deletCamAccQuery, [id]);
+    console.log(deleteCamAccResult);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error 2"));
     return;
   }
   const getUserQuery = "SELECT * FROM users WHERE ID = ? ";
@@ -240,18 +250,19 @@ usersRouter.delete("/api/users/:id", async (req, res) => {
     selectResults = await databaseConnection.query(getUserQuery, [id]);
     console.log(selectResults);
   } catch (e) {
-    res.status(400).send(JSON.stringify("error"));
+    res.status(400).send(JSON.stringify("error 3"));
     return;
   }
   deleteUser= selectResults[0];
+  console.log(deleteUser);
 
   const deletUserQuery = "DELETE FROM users WHERE ID = ? ";
   let deleteUserResult;
   try {
     deleteUserResult = await databaseConnection.query(deletUserQuery, [id]);
-    console.log(deletePassResult);
+    
   } catch (e) {
-    res.status(400).send(JSON.stringify("error"));
+    res.status(400).send(JSON.stringify("error 4"));
     return;
   }
   
