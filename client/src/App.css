@@ -59,7 +59,8 @@ div .postDiv {
   transition: border-color 0.25s;
 }
 
-.usersList {
+.usersList,
+.camerasList {
   text-align: left;
 }
 
@@ -75,6 +76,7 @@ div .postDiv {
   outline: none; /* Remove the outline when the button is focused */
 }
 
-.UserDetails {
+.UserDetails,
+.cameraDetails {
   display: inline;
 }

@@ -54,7 +54,7 @@
 //     });
 //     setIsUpdating(true);
 //   };
-  
+
 //   const handleUpdateCameraSubmit = async () => {
 //     try {
 //       const response = await fetch(
@@ -71,14 +71,14 @@
 //       if (response.ok) {
 //         const updatedData = await response.json();
 //         console.log("Camera updated:", updatedData);
-  
+
 //         // עדכון המצלמות לאחר העדכון
 //         setCameras((prevCameras) =>
 //           prevCameras.map((camera) =>
 //             camera.ID === updatedCamera.ID ? updatedCamera : camera
 //           )
 //         );
-  
+
 //         setIsUpdating(false);
 //       } else {
 //         console.error("Failed to update the camera");
@@ -95,15 +95,15 @@
 //         junction: updatedCamera.junction,
 //         video: updatedCamera.video,
 //       };
-  
+
 //       // אחרי הבקשה לשרת, בדוק האם המזהה מופיע כבר ברשימת המצלמות
 //       const isIdUnique = cameras.every((camera) => camera.ID !== updatedCamera.ID);
-      
+
 //       if (!isIdUnique) {
 //         console.error("Camera with the same ID already exists");
 //         return;
 //       }
-  
+
 //       const response = await fetch("http://localhost:3000/cameraAPI/api/cameras", {
 //         method: "POST",
 //         headers: {
@@ -111,7 +111,7 @@
 //         },
 //         body: JSON.stringify(newCamera),
 //       });
-  
+
 //       if (response.ok) {
 //         // הוספת המצלמה החדשה לרשימת המצלמות
 //         const addedCamera = await response.json();
@@ -135,7 +135,7 @@
 //       <div>
 //         <h1>Cameras List</h1>
 //         <button onClick={toggleAddCamera}>Add New Camera</button>
-        
+
 //         {isAdding && ( // הצגת הפופאפ להוספת מצלמה
 //           <div>
 //             <h2>Add Camera</h2>
@@ -219,10 +219,15 @@
 
 // export default CamerasList;
 
-
 import { Outlet, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import React from "react";
+import {
+  faTrashCan,
+  faCommentDots,
+  faPenToSquare,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../App.css";
 
 const CamerasList = () => {
@@ -262,7 +267,9 @@ const CamerasList = () => {
   useEffect(() => {
     async function fetchCameras() {
       try {
-        const response = await fetch(`http://localhost:3000/cameraAPI/api/cameras`);
+        const response = await fetch(
+          `http://localhost:3000/cameraAPI/api/cameras`
+        );
         const data = await response.json();
         setCameras(data[0]);
       } catch (error) {
@@ -278,7 +285,9 @@ const CamerasList = () => {
         method: "DELETE",
       });
 
-      setCameras((prevCamera) => prevCamera.filter((camera) => camera.ID !== id));
+      setCameras((prevCamera) =>
+        prevCamera.filter((camera) => camera.ID !== id)
+      );
     } catch (error) {
       console.error("Error:", error);
     }
@@ -324,13 +333,16 @@ const CamerasList = () => {
         video: inputs.video,
       };
 
-      const response = await fetch("http://localhost:3000/cameraAPI/api/cameras", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newCamera),
-      });
+      const response = await fetch(
+        "http://localhost:3000/cameraAPI/api/cameras",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newCamera),
+        }
+      );
 
       if (response.ok) {
         const addedCamera = await response.json();
@@ -388,48 +400,69 @@ const CamerasList = () => {
           </div>
         )}
 
-        <ul>
+        <ul className="camerasList">
           {cameras.map((camera) => (
             <li key={camera.ID}>
-              location: {camera.location} junction: {camera.junction} video: {camera.video}
-              <button onClick={() => handleDeleteCamera(camera.ID)}>
-                Delete Camera
+              <button
+                className="delete-btn"
+                onClick={() => handleDeleteCamera(camera.ID)}
+              >
+                <FontAwesomeIcon icon={faTrashCan} />
               </button>
-              <button onClick={() => toggleUpdateCamera(camera)}>
+              <button
+                className="edit-btn"
+                onClick={() => toggleUpdateCamera(camera)}
+              >
                 {isUpdating && updatedCamera && updatedCamera.ID === camera.ID
                   ? "Close Update"
-                  : "Update Camera"}
+                  : ""}
+                <FontAwesomeIcon icon={faPenToSquare} />
               </button>
-              {isUpdating && updatedCamera && updatedCamera.ID === camera.ID && (
-                <div>
-                  <h2>Update  Camera</h2>
-                  <input
-                    type="text"
-                    placeholder="Location"
-                    value={updatedCamera.location}
-                    onChange={(e) =>
-                      setUpdatedCamera({ ...updatedCamera, location: e.target.value })
-                    }
-                  />
-                  <input
-                    type="text"
-                    placeholder="Junction"
-                    value={updatedCamera.junction}
-                    onChange={(e) =>
-                      setUpdatedCamera({ ...updatedCamera, junction: e.target.value })
-                    }
-                  />
-                  <input
-                    type="text"
-                    placeholder="Video"
-                    value={updatedCamera.video}
-                    onChange={(e) =>
-                      setUpdatedCamera({ ...updatedCamera, video: e.target.value })
-                    }
-                  />
-                  <button onClick={handleUpdateCameraSubmit}>Update</button>
-                </div>
-              )}
+              <h4 className="cameraDetails"> location: </h4>
+              {camera.location} <h4 className="cameraDetails"> junction: </h4>
+              {camera.junction}
+              <h4 className="cameraDetails"> video: </h4> {camera.video}
+              {isUpdating &&
+                updatedCamera &&
+                updatedCamera.ID === camera.ID && (
+                  <div>
+                    <h2>Update Camera</h2>
+                    <input
+                      type="text"
+                      placeholder="Location"
+                      value={updatedCamera.location}
+                      onChange={(e) =>
+                        setUpdatedCamera({
+                          ...updatedCamera,
+                          location: e.target.value,
+                        })
+                      }
+                    />
+                    <input
+                      type="text"
+                      placeholder="Junction"
+                      value={updatedCamera.junction}
+                      onChange={(e) =>
+                        setUpdatedCamera({
+                          ...updatedCamera,
+                          junction: e.target.value,
+                        })
+                      }
+                    />
+                    <input
+                      type="text"
+                      placeholder="Video"
+                      value={updatedCamera.video}
+                      onChange={(e) =>
+                        setUpdatedCamera({
+                          ...updatedCamera,
+                          video: e.target.value,
+                        })
+                      }
+                    />
+                    <button onClick={handleUpdateCameraSubmit}>Update</button>
+                  </div>
+                )}
             </li>
           ))}
         </ul>
