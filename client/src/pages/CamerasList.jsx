@@ -229,19 +229,30 @@ const CamerasList = () => {
   var user1 = JSON.parse(localStorage.getItem("currentUser"));
 
   const [cameras, setCameras] = useState([]);
-  const [updatedCamera, setUpdatedCamera] = useState({
-    ID: null, 
-    location: "",
-    junction: "",
-    video: "",
-  });
+  const [updatedCamera, setUpdatedCamera] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
-
-  const toggleAddCamera = () => {
-         setIsAdding((prevState) => !prevState);
-      };
   const [isUpdating, setIsUpdating] = useState(false);
   const [inputs, setInputs] = useState({});
+
+  const toggleAddCamera = () => {
+    setIsAdding((prevState) => !prevState);
+  };
+
+  const toggleUpdateCamera = (camera) => {
+    if (isUpdating && updatedCamera && updatedCamera.ID === camera.ID) {
+      setUpdatedCamera(null);
+      setIsUpdating(false);
+    } else {
+      setUpdatedCamera({
+        ID: camera.ID,
+        location: camera.location,
+        junction: camera.junction,
+        video: camera.video,
+      });
+      setIsUpdating(true);
+    }
+  };
+
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -273,16 +284,6 @@ const CamerasList = () => {
     }
   };
 
-  const handleUpdateCamera = (camera) => {
-    setUpdatedCamera({
-      ID: camera.ID,
-      location: camera.location,
-      junction: camera.junction,
-      video: camera.video,
-    });
-    setIsUpdating(true);
-  };
-
   const handleUpdateCameraSubmit = async () => {
     try {
       const response = await fetch(
@@ -296,146 +297,145 @@ const CamerasList = () => {
         }
       );
       if (response.ok) {
-      const updatedData = await response.json();
-      console.log("User updated:", updatedData);
+        const updatedData = await response.json();
+        console.log("Camera updated:", updatedData);
 
-      // עדכון המצלמות לאחר העדכון
-      setCameras((prevCameras) =>
-        prevCameras.map((camera) =>
-          camera.ID === updatedCamera.ID ? updatedCamera : camera
-        )
-      );
+        setCameras((prevCameras) =>
+          prevCameras.map((camera) =>
+            camera.ID === updatedCamera.ID ? updatedCamera : camera
+          )
+        );
 
-      setIsUpdating(false);
-    } else {
-               console.error("Failed to update the camera");
-             }
+        setUpdatedCamera(null);
+        setIsUpdating(false);
+      } else {
+        console.error("Failed to update the camera");
+      }
     } catch (error) {
       console.error("Error:", error);
     }
-   };
+  };
 
-    const handleAddCamera = async () => {
-      try {
-        // הגדרת מצלמה חדשה להוספה
-        const newCamera = {
-          location:inputs.location,
-          junction: inputs.junction,
-          video: inputs.video,
-        };
-  
-        const response = await fetch("http://localhost:3000/cameraAPI/api/cameras", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newCamera),
-        });
-  
-        if (response.ok) {
-          // הוספת המצלמה החדשה לרשימת המצלמות
-          const addedCamera = await response.json();
-          console.log(addedCamera);
+  const handleAddCamera = async () => {
+    try {
+      const newCamera = {
+        location: inputs.location,
+        junction: inputs.junction,
+        video: inputs.video,
+      };
 
-          
-          setCameras((prevCameras) => [...prevCameras, addedCamera]);
-          setIsAdding(false);
-        } else {
-          console.error("Failed to add a new camera");
-        }
-      } catch (error) {
-        console.error("Error:", error);
+      const response = await fetch("http://localhost:3000/cameraAPI/api/cameras", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newCamera),
+      });
+
+      if (response.ok) {
+        const addedCamera = await response.json();
+        console.log(addedCamera);
+
+        setCameras((prevCameras) => [...prevCameras, addedCamera]);
+        setIsAdding(false);
+      } else {
+        console.error("Failed to add a new camera");
       }
-    };
-  
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <div className="users-container">
-      
-     
       <Link to="/Admin">
         <button className="logout-button">Back</button>
       </Link>
       <div>
         <h1>Cameras List</h1>
-        <button onClick={toggleAddCamera}>Add New Camera</button>
-        
-        {isAdding && ( // הצגת הפופאפ להוספת מצלמה
-           <div>
-             <h2>Add Camera</h2>
-             <input
-               type="text"
+        <button onClick={toggleAddCamera}>
+          {isAdding ? "Cancel" : "Add New Camera"}
+        </button>
+
+        {isAdding && (
+          <div>
+            <h2>Add Camera</h2>
+            <input
+              type="text"
               name="location"
-               placeholder="Location"
-               value={inputs.location|| ""}
-               onChange={handleChange}
-            required
-             />
-             <input
-               type="text"
-               name="junction"
-               placeholder="Junction"
-               value={inputs.junction|| ""}
-             onChange={handleChange}
-             required
+              placeholder="Location"
+              value={inputs.location || ""}
+              onChange={handleChange}
+              required
             />
-             <input
-             type="text"
-               name="video"
-               placeholder="Video"
-               value={inputs.video|| ""}
-               onChange={handleChange}
-            required
-             />
+            <input
+              type="text"
+              name="junction"
+              placeholder="Junction"
+              value={inputs.junction || ""}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="text"
+              name="video"
+              placeholder="Video"
+              value={inputs.video || ""}
+              onChange={handleChange}
+              required
+            />
             <button onClick={handleAddCamera}>Add Camera</button>
-           </div>
+          </div>
         )}
+
         <ul>
           {cameras.map((camera) => (
             <li key={camera.ID}>
               location: {camera.location} junction: {camera.junction} video: {camera.video}
-              <button onClick={() => handleDeleteCamera(camera.ID)}>Delete Camera</button>
-              <button onClick={() => handleUpdateCamera(camera)}>Update Camera</button>
+              <button onClick={() => handleDeleteCamera(camera.ID)}>
+                Delete Camera
+              </button>
+              <button onClick={() => toggleUpdateCamera(camera)}>
+                {isUpdating && updatedCamera && updatedCamera.ID === camera.ID
+                  ? "Close Update"
+                  : "Update Camera"}
+              </button>
+              {isUpdating && updatedCamera && updatedCamera.ID === camera.ID && (
+                <div>
+                  <h2>Update  Camera</h2>
+                  <input
+                    type="text"
+                    placeholder="Location"
+                    value={updatedCamera.location}
+                    onChange={(e) =>
+                      setUpdatedCamera({ ...updatedCamera, location: e.target.value })
+                    }
+                  />
+                  <input
+                    type="text"
+                    placeholder="Junction"
+                    value={updatedCamera.junction}
+                    onChange={(e) =>
+                      setUpdatedCamera({ ...updatedCamera, junction: e.target.value })
+                    }
+                  />
+                  <input
+                    type="text"
+                    placeholder="Video"
+                    value={updatedCamera.video}
+                    onChange={(e) =>
+                      setUpdatedCamera({ ...updatedCamera, video: e.target.value })
+                    }
+                  />
+                  <button onClick={handleUpdateCameraSubmit}>Update</button>
+                </div>
+              )}
             </li>
           ))}
         </ul>
       </div>
-
-      {isUpdating ? (
-        <div>
-          <h2>Update  Camera</h2>
-          <input
-            type="text"
-            placeholder="Location"
-            value={updatedCamera.location}
-            onChange={(e) =>
-              setUpdatedCamera({ ...updatedCamera, location: e.target.value })
-            }
-          />
-          <input
-            type="text"
-            placeholder="Junction"
-            value={updatedCamera.junction}
-            onChange={(e) =>
-              setUpdatedCamera({ ...updatedCamera, junction: e.target.value })
-            }
-          />
-          <input
-            type="text"
-            placeholder="Video"
-            value={updatedCamera.video}
-            onChange={(e) =>
-              setUpdatedCamera({ ...updatedCamera, video: e.target.value })
-            }
-          />
-          <button onClick={handleUpdateCameraSubmit}>Update</button>
-        </div>
-      ) : null}
     </div>
   );
 };
 
 export default CamerasList;
-
-
-

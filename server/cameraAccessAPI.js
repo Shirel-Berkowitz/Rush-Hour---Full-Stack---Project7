@@ -8,6 +8,27 @@ const cameraAccessRouter = express.Router();
 
 
 // GET request to fetch camera access for a user
+cameraAccessRouter.get("/api/cameraAccess/:cameraID", async (req, res) => {
+  let cameraID = parseInt(req.params.cameraID);
+
+  const getCameraQuery = "SELECT userID FROM cameraAccess WHERE cameraID = ?";
+  let result;
+  
+
+  try {
+    result = await databaseConnection.query(getCameraQuery, [cameraID]);
+    console.log(result);
+    console.log(result[0]);
+    
+    
+  } catch (error) {
+    console.error("Error fetching camera access:", error);
+    res.status(400).send(JSON.stringify("An error occurred while fetching camera access"));
+    
+  }
+  res.json(result[0]);
+});
+
 cameraAccessRouter.get("/api/cameraAccess/:userID", async (req, res) => {
   let userId = parseInt(req.params.userID);
 
@@ -28,7 +49,6 @@ cameraAccessRouter.get("/api/cameraAccess/:userID", async (req, res) => {
   }
   res.json(result[0]);
 });
-
 
 // cameraAccessRouter.get("/api/cameraAccess/:cameraID", async (req, res) => {
 //   let cameraID = req.params.cameraID;
@@ -72,6 +92,77 @@ cameraAccessRouter.get("/api/cameraAccess/:userID", async (req, res) => {
 //     }
 //   });
 // });
+
+cameraAccessRouter.post("/api/cameraAccess/:userID/:cameraID", async (req, res) => {
+  const cameraID =parseInt(req.params.cameraID); 
+  const userID =parseInt(req.params.userID);
+  console.log(cameraID);
+  console.log(userID);
+    
+    
+  
+  const postcameraAccessQuery =
+    "INSERT INTO cameraAccess (userID, cameraID) VALUES (?, ?)";
+  let result;
+
+  try {
+    result = await databaseConnection.query(postcameraAccessQuery, [userID, cameraID]);
+    
+    console.log("result");
+    console.log(result);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+  
+  res.status(200).json('success');
+});
+
+
+///DELETE/// 
+cameraAccessRouter.delete("/api/cameraAccess/:userID", async (req, res) => {
+  const userID = parseInt(req.params.userID);
+  
+
+  const deletCamQuery = "DELETE FROM cameraAccess WHERE userID = ? ";
+  let deleteCamResult;
+
+  try {
+    deleteCamResult = await databaseConnection.query(deletCamQuery, [userID]);
+    console.log(deleteCamResult);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+  // const getuserQuery = "SELECT * FROM users WHERE ID = ? ";
+  // let deleteCameraAcc;
+  // let selectResults;
+
+  // try {
+  //   selectResults = await databaseConnection.query(getuserQuery, [userID]);
+  //   console.log(selectResults);
+  // } catch (e) {
+  //   res.status(400).send(JSON.stringify("error"));
+  //   return;
+  // }
+  // deleteCameraAcc= selectResults[0];
+
+  // const deletCameraQuery = "DELETE FROM cameras WHERE ID = ? ";
+  // let deleteCameraResult;
+  // try {
+  //   deleteCameraResult = await databaseConnection.query(deletCameraQuery, [id]);
+  //   console.log(deleteCameraResult);
+  // } catch (e) {
+  //   res.status(400).send(JSON.stringify("error"));
+  //   return;
+  // }
+  
+  res.json(deleteCamera);
+
+
+});
+
+
 
 // DELETE request to revoke camera access from a user
 // cameraAccessRouter.delete("/cameraAccess/:userId/:cameraId", (req, res) => {

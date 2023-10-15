@@ -7,81 +7,81 @@ const usersRouter = express.Router();
 
 
 ///POST///
-usersRouter.post("/api/users/login", async (req, res) => {
-  const { username, password } = req.body;
+// usersRouter.post("/api/users/login", async (req, res) => {
+//   const { username, password } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({ error: "Missing username or password" });
-  }
+//   if (!username || !password) {
+//     return res.status(400).json({ error: "Missing username or password" });
+//   }
 
-  // Query to get the user's ID based on the username
-  const getIdQuery = `SELECT id FROM users WHERE username = ?`;
+//   // Query to get the user's ID based on the username
+//   const getIdQuery = `SELECT id FROM users WHERE username = ?`;
 
-  let results1;
+//   let results1;
 
-  try {
-    results1 = await databaseConnection.query(getIdQuery, [username]);
-  } catch (e) {
-    res.status(400).send(JSON.stringify("Server error"));
-    return;
-  }
+//   try {
+//     results1 = await databaseConnection.query(getIdQuery, [username]);
+//   } catch (e) {
+//     res.status(400).send(JSON.stringify("Server error"));
+//     return;
+//   }
 
-  if (results1.length === 0) {
-    return res.status(401).json({ message: "Username not found" });
-  }
+//   if (results1.length === 0) {
+//     return res.status(401).json({ message: "Username not found" });
+//   }
 
-  const userId = results1[0][0].id;
-  console.log(userId);
+//   const userId = results1[0][0].id;
+//   console.log(userId);
 
-  // Query to get the user's password based on the ID
-  const getPasswordQuery = `SELECT password FROM passwords WHERE userID = ?`;
+//   // Query to get the user's password based on the ID
+//   const getPasswordQuery = `SELECT password FROM passwords WHERE userID = ?`;
 
-  let results2;
+//   let results2;
 
-  try {
-    results2 = await databaseConnection.query(getPasswordQuery, [userId]);
-    console.log(results2);
-  } catch (e) {
-    res.status(400).send(JSON.stringify("Server error"));
-    return;
-  }
+//   try {
+//     results2 = await databaseConnection.query(getPasswordQuery, [userId]);
+//     console.log(results2);
+//   } catch (e) {
+//     res.status(400).send(JSON.stringify("Server error"));
+//     return;
+//   }
 
-  if (results2.length === 0) {
-    return res.status(500).json({ message: "User password not found" });
-  }
+//   if (results2.length === 0) {
+//     return res.status(500).json({ message: "User password not found" });
+//   }
 
-  const userPassword = results2[0][0].password;
-  console.log(userPassword);
+//   const userPassword = results2[0][0].password;
+//   console.log(userPassword);
 
-  const getNameQuery = `SELECT name FROM users WHERE id = ?`;
+//   const getNameQuery = `SELECT name FROM users WHERE id = ?`;
 
-  let nameResults;
+//   let nameResults;
 
-  try {
-    nameResults = await databaseConnection.query(getNameQuery, [userId]);
-    console.log(nameResults);
-  } catch (e) {
-    res.status(400).send(JSON.stringify("Server error"));
-    console.log("results");
-    return;
-  }
+//   try {
+//     nameResults = await databaseConnection.query(getNameQuery, [userId]);
+//     console.log(nameResults);
+//   } catch (e) {
+//     res.status(400).send(JSON.stringify("Server error"));
+//     console.log("results");
+//     return;
+//   }
 
-  if (nameResults.length === 0) {
-    return res.status(500).json({ message: "User name not found" });
-  }
+//   if (nameResults.length === 0) {
+//     return res.status(500).json({ message: "User name not found" });
+//   }
 
-  const userName = nameResults[0][0].name;
+//   const userName = nameResults[0][0].name;
 
-  if (userPassword === password) {
-    // Password is correct
+//   if (userPassword === password) {
+//     // Password is correct
 
-    res.json(username);
-  } else {
-    // Password is incorrect
+//     res.json(username);
+//   } else {
+//     // Password is incorrect
 
-    return res.status(401).json({ message: "Incorrect password" });
-  }
-});
+//     return res.status(401).json({ message: "Incorrect password" });
+//   }
+// });
 
 usersRouter.post("/api/users", async (req, res) => {
   const user = {
@@ -106,11 +106,83 @@ usersRouter.post("/api/users", async (req, res) => {
   res.json(user);
 });
 
+usersRouter.post("/api/users/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ error: "Missing username or password" });
+  }
+
+  // Query to get the user's ID based on the username
+  const getIdQuery = `SELECT id FROM users WHERE username = ?`;
+
+  let results1;
+
+  try {
+    results1 = await databaseConnection.query(getIdQuery, [username]);
+  } catch (e) {
+    return res.status(500).json({ message: "Server error" });
+  }
+
+  if (results1.length === 0) {
+    return res.status(401).json({ message: "Username not found" });
+  }
+
+  const userId = results1[0][0].id;
+
+  // Query to get the user's password based on the ID
+  const getPasswordQuery = `SELECT password FROM passwords WHERE userID = ?`;
+
+  let results2;
+
+  try {
+    results2 = await databaseConnection.query(getPasswordQuery, [userId]);
+  } catch (e) {
+    return res.status(500).json({ message: "Server error" });
+  }
+
+  if (results2.length === 0) {
+    return res.status(500).json({ message: "User password not found" });
+  }
+
+  const userPassword = results2[0][0].password;
+
+  const getNameQuery = `SELECT name FROM users WHERE id = ?`;
+
+  let nameResults;
+
+  try {
+    nameResults = await databaseConnection.query(getNameQuery, [userId]);
+  } catch (e) {
+    return res.status(500).json({ message: "Server error" });
+  }
+
+  if (nameResults.length === 0) {
+    return res.status(500).json({ message: "User name not found" });
+  }
+
+  const userName = nameResults[0][0].name;
+
+  if (userPassword === password) {
+    // Password is correct
+    res.json(username);
+  } else {
+    if (userName !== username) {
+      // Both username and password are incorrect
+      return res.status(401).json({ message: "Incorrect username and password" });
+    } else {
+      // Password is incorrect
+      return res.status(401).json({ message: "Incorrect password" });
+    }
+  }
+});
+
 
 
 ///GET///
 usersRouter.get("/api/users/:username", async (req, res) => {
   let username = req.params.username;
+  console.log(username);
 
   const getUserQuery = "SELECT * FROM users WHERE username = ?";
   let result;

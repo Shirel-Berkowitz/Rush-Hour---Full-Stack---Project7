@@ -33,7 +33,13 @@ const Admin = () => {
          <Link to={`/Admin/${user.id}/camerasList`}>
 
             <button>
-            cameras List
+            Cameras List
+            </button>
+         </Link>
+         <Link to={`/Admin/${user.id}/CamerasAccess`}>
+
+            <button>
+            Camera access permissions
             </button>
          </Link>
       
