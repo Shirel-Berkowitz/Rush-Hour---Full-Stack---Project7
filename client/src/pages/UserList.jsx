@@ -1,6 +1,12 @@
 import { Outlet, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import React from "react";
+import {
+  faTrashCan,
+  faCommentDots,
+  faPenToSquare,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../App.css";
 
 const UserList = () => {
@@ -89,16 +95,29 @@ const UserList = () => {
       </Link>
       <div>
         <h1>Users List</h1>
-        <ul>
+        <ul className="usersList">
           {users.map((user) => (
             <li key={user.ID}>
-              name: {user.name} username: {user.username} rank: {user.userRank}
-              <button onClick={() => handleDeleteUser(user.ID)}>Delete User</button>
-              <button onClick={() => handleUpdateUser(user)}>
+              <button className="delete-btn">
+                <FontAwesomeIcon
+                  icon={faTrashCan}
+                  onClick={() => handleDeleteUser(user.ID)}
+                />
+                {/* Delete User */}
+              </button>
+              <button
+                className="edit-btn"
+                onClick={() => handleUpdateUser(user)}
+              >
                 {isUpdatingUser && updatedUser && updatedUser.ID === user.ID
                   ? "Close Update"
-                  : "Update User"}
+                  : ""}
+                <FontAwesomeIcon icon={faPenToSquare} />
               </button>
+              <h4 className="UserDetails"> name: </h4>
+              {user.name} <h4 className="UserDetails">username: </h4>
+              {user.username} <h4 className="UserDetails">rank: </h4>
+              {user.userRank}
               {isUpdatingUser && updatedUser && updatedUser.ID === user.ID && (
                 <div>
                   <h2>Update User</h2>
@@ -115,7 +134,10 @@ const UserList = () => {
                     placeholder="Username"
                     value={updatedUser.username}
                     onChange={(e) =>
-                      setUpdatedUser({ ...updatedUser, username: e.target.value })
+                      setUpdatedUser({
+                        ...updatedUser,
+                        username: e.target.value,
+                      })
                     }
                   />
                   <input
@@ -123,7 +145,10 @@ const UserList = () => {
                     placeholder="Rank"
                     value={updatedUser.userRank}
                     onChange={(e) =>
-                      setUpdatedUser({ ...updatedUser, userRank: e.target.value })
+                      setUpdatedUser({
+                        ...updatedUser,
+                        userRank: e.target.value,
+                      })
                     }
                   />
                   <button onClick={handleUpdateUserSubmit}>Update</button>

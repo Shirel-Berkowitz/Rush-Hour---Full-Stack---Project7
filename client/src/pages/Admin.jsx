@@ -17,35 +17,25 @@ const Admin = () => {
           Logout
         </button>
       </Link>
-      
+
       <Link to={`/Admin/${user.id}/Register`}>
-
-               <button>
-               Adding a new user
-               </button>
-             </Link>
+        <button>Add new user</button>
+      </Link>
       <Link to={`/Admin/${user.id}/UserList`}>
+        <button>Users List</button>
+      </Link>
+      <Link to={`/Admin/${user.id}/camerasList`}>
+        <button>Cameras List</button>
+      </Link>
+      <Link to={`/Admin/${user.id}/CamerasAccess`}>
+        <button>Camera access permissions</button>
+      </Link>
 
-            <button>
-            Users List
-            </button>
-         </Link>
-         <Link to={`/Admin/${user.id}/camerasList`}>
-
-            <button>
-            Cameras List
-            </button>
-         </Link>
-         <Link to={`/Admin/${user.id}/CamerasAccess`}>
-
-            <button>
-            Camera access permissions
-            </button>
-         </Link>
-      
       <nav className="user-navigation">
         <ul>
-          <li>{<Link to={`/Admin/${user.id}/CamerasAdmin`}> My Cameras</Link>}</li>
+          <li>
+            {<Link to={`/Admin/${user.id}/CamerasAdmin`}> My Cameras</Link>}
+          </li>
           <li>
             {/* {<Link to={`/Admin/${user.id}/VideoAnalysis`}>Video analysis</Link>} */}
           </li>
