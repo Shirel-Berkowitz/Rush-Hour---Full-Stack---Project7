@@ -13,15 +13,13 @@ cameraAccessRouter.get("/api/cameraAccess/:userID", async (req, res) => {
 
   const getCameraQuery = "SELECT cameraID FROM cameraAccess WHERE userID = ?";
   let result;
-  let cameraIDs;
+  
 
   try {
     result = await databaseConnection.query(getCameraQuery, [userId]);
     console.log(result);
     console.log(result[0]);
-    // cameraIDs = result.map((row) => row.cameraID);
-    // console.log("cameraIDs");
-    // console.log(cameraIDs);
+    
     
   } catch (error) {
     console.error("Error fetching camera access:", error);

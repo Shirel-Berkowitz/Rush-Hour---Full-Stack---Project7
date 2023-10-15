@@ -23,6 +23,25 @@ cameraRouter.get("/api/cameras", async (req, res) => {
 
   res.json(result);
 });
+cameraRouter.get("/api/cameras/:video", async (req, res) => {
+  let video = req.params.video;
+
+
+  const getCameraQuery = "SELECT * FROM cameras WHERE video = ?";
+  let result;
+
+  try {
+    result = await databaseConnection.query(getCameraQuery,[video]);
+    console.log(result);
+    console.log(result[0]);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+
+  res.json(result[0]);
+});
+
 
 cameraRouter.get("/api/camera/:ID", async (req, res) => {
   let cameraID = parseInt(req.params.ID);
@@ -176,11 +195,15 @@ cameraRouter.post("/api/cameras", async (req, res) => {
       camera.junction,
       camera.video,
     ]);
-    const newCameraId = result.insertId; // תחזיר את המזהה שנוצר
+    const newCameraId = result[0].insertId; // תחזיר את המזהה שנוצר
     console.log("result");
     console.log(result);
-    const newCamera = { ...camera, ID: newCameraId }; // הוסף את המזהה למופע המצלמה
+    console.log(newCameraId);
+    const newCamera = {ID: newCameraId,...camera }; // הוסף את המזהה למופע המצלמה
+    console.log("newCamera");
+    console.log(newCamera);
     res.json(newCamera); // החזר את המצלמה עם המזהה ללקוח
+    //res.json(camera);
   } catch (e) {
     res.status(400).send(JSON.stringify("Server error"));
     return;

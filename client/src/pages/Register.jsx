@@ -46,7 +46,7 @@ const Register = () => {
       console.log(userData[0].ID);
 
       const passwordResponse = await fetch(
-        `http://localhost:3000/userAPI/api/users/${userData[0].ID}/password`,
+        `http://localhost:3000/passwordAPI/api/users/${userData[0].ID}/password`,
         {
           method: "POST",
           headers: {
