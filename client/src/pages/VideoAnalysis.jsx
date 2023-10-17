@@ -24,7 +24,7 @@ const VideoAnalysis = () => {
           const errorMessage = await response.json();
           alert(errorMessage);
           return;
-        }
+        }else{
         //Camera ID
         const data = await response.json();
         setCamera(data[0]);
@@ -32,6 +32,7 @@ const VideoAnalysis = () => {
         
          console.log(data[0]);
          setLoading(false);
+        }
 
 
         } catch (error) {
