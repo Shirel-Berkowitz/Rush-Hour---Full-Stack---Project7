@@ -9,13 +9,13 @@ const VideoAnalysis = () => {
   const [camera, setCamera] = useState({});
   const user = JSON.parse(localStorage.getItem("currentUser"));
   const { cameraID } = useParams();
-  const [loading, setLoading] = useState(true);
+  //const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     // setUser(currentUser);
     async function fetchData() {
-      if (loading) {
+      
       try {
         const response = await fetch(
           `http://localhost:3000/cameraAPI/api/camera/${cameraID}`,
@@ -31,17 +31,17 @@ const VideoAnalysis = () => {
          
         
          console.log(data[0]);
-         setLoading(false);
+         //setLoading(false);
         }
 
 
         } catch (error) {
           console.error(error);
         }
-        }
+        
       }
       fetchData();
-  }, [cameraID,loading]);
+  }, [cameraID]);
 
   return (
     <div className="vid-container">
