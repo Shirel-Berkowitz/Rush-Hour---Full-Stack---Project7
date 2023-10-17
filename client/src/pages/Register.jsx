@@ -11,6 +11,9 @@ const Register = () => {
     setInputs((values) => ({ ...values, [name]: value }));
   };
   async function fetchData() {
+    
+    setInputs({});
+
     const user = {
       name: inputs.name,
       username: inputs.username,
@@ -25,6 +28,11 @@ const Register = () => {
         },
         body: JSON.stringify(user),
       });
+      if (response.status === 400) {
+        const errorMessage = await response.json();
+        alert(errorMessage);
+        return;
+      }
 
       const data = await response.json();
       console.log(data);
@@ -52,6 +60,11 @@ const Register = () => {
           body: JSON.stringify({ password: password }),
         }
       );
+      if (passwordResponse.status === 400) {
+        const errorMessage = await passwordResponse.json();
+        alert(errorMessage);
+        return;
+      }
 
       const passwordData = await passwordResponse.json();
       console.log(passwordData);
@@ -69,7 +82,7 @@ const Register = () => {
     if (inputs.password !== inputs.validationPassword) {
       alert("Passwords do not match. Please try again.");
       return;
-    }
+    } 
     fetchData();
   };
 
@@ -147,86 +160,3 @@ const Register = () => {
   );
 };
 export default Register;
-// import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import nodemailer from "nodemailer"; // הוספתי יבוא עבור Nodemailer
-
-// const Register = () => {
-//   const [inputs, setInputs] = useState({});
-//   const navigate = useNavigate();
-
-//   const handleChange = (event) => {
-//     const name = event.target.name;
-//     const value = event.target.value;
-//     setInputs((values) => ({ ...values, [name]: value }));
-//   };
-
-//   // הפונקציה המשופרת לשליחת המייל
-//   async function sendEmail(toEmail, subject, text) {
-//     const transporter = nodemailer.createTransport({
-//       service: "Gmail", // שניתה לשירות המתאים, לדוגמה, "Gmail" לשימוש עם Gmail
-//       auth: {
-//         user: "shiraz.c121@gmail.com", // כתובת הדואר האלקטרוני שלך
-//         pass: "101928374", // הסיסמה של כתובת הדואר האלקטרוני
-//       },
-//     });
-
-//     const mailOptions = {
-//       from: "shiraz.c121@gmail.com", // כתובת השולח
-//       to: toEmail, // כתובת המקבל - שימוש בכתובת הדואר האלקטרוני שהמשתמש הזין בטופס
-//       subject: subject,
-//       text: text,
-//     };
-
-//     try {
-//       const info = await transporter.sendMail(mailOptions);
-//       console.log("Email sent: " + info.response);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   }
-
-//   async function fetchData() {
-//     // קוד כניסת המשתמש, הכתובת, וכו'
-//   }
-
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     if (inputs.password !== inputs.validationPassword) {
-//       alert("Passwords do not match. Please try again.");
-//       return;
-//     }
-//     fetchData();
-
-//     // שולחים את המייל בסוף הפעולה
-//     sendEmail(inputs.email, "Your user information", `Hello, this is your username: ${inputs.username} and password: ${inputs.password}`);
-
-//     navigate(`/Admin`);
-//     alert("The addition of the user has been recorded in the system");
-//   };
-
-//   return (
-//     <div className="background1">
-//       <form onSubmit={handleSubmit}>
-//         <h1>Sign up</h1>
-//         <div className="form-group">
-//           <label htmlFor="name">Name:</label>
-//           <input
-//             type="text"
-//             id="name"
-//             name="name"
-//             value={inputs.name || ""}
-//             onChange={handleChange}
-//             required
-//           />
-//         </div>
-
-//         {/* שאר הטופס כאן */}
-
-//         <button type="submit">Send</button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default Register;

@@ -7,91 +7,44 @@ const usersRouter = express.Router();
 
 
 ///POST///
-// usersRouter.post("/api/users/login", async (req, res) => {
-//   const { username, password } = req.body;
 
-//   if (!username || !password) {
-//     return res.status(400).json({ error: "Missing username or password" });
-//   }
-
-//   // Query to get the user's ID based on the username
-//   const getIdQuery = `SELECT id FROM users WHERE username = ?`;
-
-//   let results1;
-
-//   try {
-//     results1 = await databaseConnection.query(getIdQuery, [username]);
-//   } catch (e) {
-//     res.status(400).send(JSON.stringify("Server error"));
-//     return;
-//   }
-
-//   if (results1.length === 0) {
-//     return res.status(401).json({ message: "Username not found" });
-//   }
-
-//   const userId = results1[0][0].id;
-//   console.log(userId);
-
-//   // Query to get the user's password based on the ID
-//   const getPasswordQuery = `SELECT password FROM passwords WHERE userID = ?`;
-
-//   let results2;
-
-//   try {
-//     results2 = await databaseConnection.query(getPasswordQuery, [userId]);
-//     console.log(results2);
-//   } catch (e) {
-//     res.status(400).send(JSON.stringify("Server error"));
-//     return;
-//   }
-
-//   if (results2.length === 0) {
-//     return res.status(500).json({ message: "User password not found" });
-//   }
-
-//   const userPassword = results2[0][0].password;
-//   console.log(userPassword);
-
-//   const getNameQuery = `SELECT name FROM users WHERE id = ?`;
-
-//   let nameResults;
-
-//   try {
-//     nameResults = await databaseConnection.query(getNameQuery, [userId]);
-//     console.log(nameResults);
-//   } catch (e) {
-//     res.status(400).send(JSON.stringify("Server error"));
-//     console.log("results");
-//     return;
-//   }
-
-//   if (nameResults.length === 0) {
-//     return res.status(500).json({ message: "User name not found" });
-//   }
-
-//   const userName = nameResults[0][0].name;
-
-//   if (userPassword === password) {
-//     // Password is correct
-
-//     res.json(username);
-//   } else {
-//     // Password is incorrect
-
-//     return res.status(401).json({ message: "Incorrect password" });
-//   }
-// });
 
 usersRouter.post("/api/users", async (req, res) => {
+  const name = req.body.name;
+  const username = req.body.username;
+  const userRank = req.body.userRank;
+
+  if (!name || !username || !userRank) {
+    res.status(400).send(JSON.stringify("Please fill in all required fields"));
+    return;
+  }
+
+  // בדיקה אם השם המשתמש כבר קיים במערכת
+  const checkUsernameQuery = "SELECT * FROM users WHERE username = ?";
+  let usernameExists;
+  try {
+    usernameExists = await databaseConnection.query(checkUsernameQuery, [username]);
+    if (usernameExists[0].length) {
+      res.status(400).send(JSON.stringify("Username already exists in the system, please choose another username"));
+      return;
+    }
+  } catch (e) {
+    res.status(500).send(JSON.stringify("Server error"));
+    return;
+  }
+
+  if (userRank !== "user" && userRank !== "admin") {
+    res.status(400).send(JSON.stringify("Please choose an appropriate role, user or admin"));
+    return;
+  }
+
   const user = {
-    name: req.body.name,
-    username: req.body.username,
-    userRank: req.body.userRank,
+    name: name,
+    username: username,
+    userRank: userRank,
   };
-  const postUserQuery = `INSERT INTO users (name, username, userRank ) VALUES (?, ?, ?)`;
+  const postUserQuery = "INSERT INTO users (name, username, userRank) VALUES (?, ?, ?)";
   let result;
-  console.log(user);
   try {
     result = await databaseConnection.query(postUserQuery, [
       user.name,
@@ -100,17 +53,22 @@ usersRouter.post("/api/users", async (req, res) => {
     ]);
     console.log(result);
   } catch (e) {
-    res.status(400).send(JSON.stringify("Server error"));
+    res.status(500).send(JSON.stringify("Server error"));
     return;
   }
   res.json(user);
 });
 
+
+
 usersRouter.post("/api/users/login", async (req, res) => {
   const { username, password } = req.body;
+  console.log(username);
+  console.log(password);
 
   if (!username || !password) {
     return res.status(400).json({ error: "Missing username or password" });
+
   }
 
   // Query to get the user's ID based on the username
@@ -120,13 +78,17 @@ usersRouter.post("/api/users/login", async (req, res) => {
 
   try {
     results1 = await databaseConnection.query(getIdQuery, [username]);
+
+    console.log(results1[0].length);
+
+    if (!results1[0].length) {
+      return res.status(401).json({ message: "Username not found" });
+    }
   } catch (e) {
     return res.status(500).json({ message: "Server error" });
   }
 
-  if (results1.length === 0) {
-    return res.status(401).json({ message: "Username not found" });
-  }
+  
 
   const userId = results1[0][0].id;
 
@@ -137,13 +99,14 @@ usersRouter.post("/api/users/login", async (req, res) => {
 
   try {
     results2 = await databaseConnection.query(getPasswordQuery, [userId]);
+    if (!results2[0].length) {
+      return res.status(401).json({ message: "User password not found" });
+    }
   } catch (e) {
     return res.status(500).json({ message: "Server error" });
   }
 
-  if (results2.length === 0) {
-    return res.status(500).json({ message: "User password not found" });
-  }
+  
 
   const userPassword = results2[0][0].password;
 
@@ -153,15 +116,16 @@ usersRouter.post("/api/users/login", async (req, res) => {
 
   try {
     nameResults = await databaseConnection.query(getNameQuery, [userId]);
+    if (!nameResults[0].length) {
+      return res.status(401).json({ message: "User name not found" });
+    }
   } catch (e) {
     return res.status(500).json({ message: "Server error" });
   }
 
-  if (nameResults.length === 0) {
-    return res.status(500).json({ message: "User name not found" });
-  }
+ 
 
-  const userName = nameResults[0][0].name;
+   const userName = nameResults[0][0].name;
 
   if (userPassword === password) {
     // Password is correct
@@ -190,13 +154,48 @@ usersRouter.get("/api/users/:username", async (req, res) => {
   try {
     result = await databaseConnection.query(getUserQuery, [username]);
     console.log(result);
-  } catch (e) {
-    res.status(400).send(JSON.stringify("error"));
-    return;
-  }
+    console.log("result");
+    console.log(result[0].length);
 
-  res.json(result[0]);
+    if ( !result[0].length ) {
+      res.status(404).json({ error: "User not found" });
+      
+    } else {
+      
+      
+      res.json(result[0]);
+    }
+  } catch (e) {
+    
+    res.status(500).json({ error: "Error executing the query" });
+  }
 });
+
+
+usersRouter.get("/api/users/:ID/user", async (req, res) => {
+  const userID = parseInt(req.params.ID);
+  
+
+  const getUserQuery = "SELECT * FROM users WHERE ID = ?";
+  let result;
+
+  try {
+    result = await databaseConnection.query(getUserQuery, [userID]);
+    console.log(result);
+
+    if (!result[0].length) {
+      
+      res.status(404).json({ error: "User not found" });
+    } else {
+      
+      res.json(result[0]);
+    }
+  } catch (e) {
+    
+    res.status(500).json({ error: "Error executing the query" });
+  }
+});
+
 
 
 usersRouter.get("/api/users", async (req, res) => {
@@ -208,15 +207,21 @@ usersRouter.get("/api/users", async (req, res) => {
   try {
     result = await databaseConnection.query(getUserQuery);
     console.log(result);
+    if (!result.length) {
+      
+      res.status(404).json({ error: "Users not found" });
+    } else {
+      
+      res.json(result);
+    }
   } catch (e) {
-    res.status(400).send(JSON.stringify("error"));
+    res.status(500).json({ error: "Error executing the query" });
     return;
   }
 
-  res.json(result);
 });
 
-usersRouter.get("/api/users/:userRank", async (req, res) => {
+usersRouter.get("/api/users/:userRank/rank", async (req, res) => {
   let userRank = req.params.userRank;
   
 
@@ -241,7 +246,39 @@ usersRouter.get("/api/users/:userRank", async (req, res) => {
 ///PUT///
 usersRouter.put("/api/users/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  const { name, username ,userRank } = req.body;
+  const { name, username, userRank } = req.body;
+
+  if (userRank !== "user" && userRank !== "admin") {
+    res.status(400).send(JSON.stringify("Please choose an appropriate role, user or admin"));
+    return;
+  }
+
+  // Fetch the current username from the database
+  const getCurrentUsernameQuery = "SELECT username FROM users WHERE ID = ?";
+  let currentUsername;
+  try {
+    currentUsername = await databaseConnection.query(getCurrentUsernameQuery, [id]);
+  } catch (e) {
+    res.status(500).send(JSON.stringify("Server error"));
+    return;
+  }
+
+  // Check if the new username is different from the current one
+  if (currentUsername[0][0].username !== username) {
+    // Check if the new username already exists in the database
+    const checkUsernameQuery = "SELECT ID FROM users WHERE username = ?";
+    let usernameExists;
+    try {
+      usernameExists = await databaseConnection.query(checkUsernameQuery, [username]);
+      if (usernameExists[0].length) {
+        res.status(400).send(JSON.stringify("Username already exists in the system, please choose another username"));
+        return;
+      }
+    } catch (e) {
+      res.status(500).send(JSON.stringify("Server error"));
+      return;
+    }
+  }
 
   let sql = `UPDATE users SET`;
   const values = [];
@@ -255,6 +292,7 @@ usersRouter.put("/api/users/:id", async (req, res) => {
     sql += ` username = ?,`;
     values.push(username);
   }
+  
   if (userRank !== undefined) {
     sql += ` userRank = ?,`;
     values.push(userRank);
@@ -286,8 +324,8 @@ usersRouter.put("/api/users/:id", async (req, res) => {
   }
 
   res.json(result[0]);
-
 });
+
 
 ///DELETE/// 
 usersRouter.delete("/api/users/:id", async (req, res) => {

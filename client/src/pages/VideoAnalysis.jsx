@@ -20,11 +20,17 @@ const VideoAnalysis = () => {
         const response = await fetch(
           `http://localhost:3000/cameraAPI/api/camera/${cameraID}`,
         );
+        if (response.status === 403) {
+          const errorMessage = await response.json();
+          alert(errorMessage);
+          return;
+        }
         //Camera ID
         const data = await response.json();
-        setCamera(data[0][0]);
+        setCamera(data[0]);
          
-         console.log(data[0][0]);
+        
+         console.log(data[0]);
          setLoading(false);
 
 
@@ -40,7 +46,7 @@ const VideoAnalysis = () => {
     <div className="vid-container">
       {/* <h1 className="vid-header">Video</h1> */}
       <video width="600" height="400" controls>
-        <source src="../Videos/video1.mp4" type="video/mp4" />
+        {/* <source src="../Videos/video1.mp4" type="video/mp4" /> */}
       </video>
       {user && (
         <div className="background">

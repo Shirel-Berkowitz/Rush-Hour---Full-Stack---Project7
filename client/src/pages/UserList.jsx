@@ -72,6 +72,11 @@ const UserList = () => {
           body: JSON.stringify(updatedUser),
         }
       );
+      if (response.status === 400) {
+        const errorMessage = await response.json();
+        alert(errorMessage);
+        return;
+      }
       const updatedData = await response.json();
       console.log("User updated:", updatedData);
 

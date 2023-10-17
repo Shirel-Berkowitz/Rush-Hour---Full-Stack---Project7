@@ -16,14 +16,21 @@ cameraRouter.get("/api/cameras", async (req, res) => {
   try {
     result = await databaseConnection.query(getCameraQuery);
     console.log(result);
+    if (!result.length) {
+      
+      res.status(404).json({ error: "Cameras not found" });
+    } else {
+      
+      res.json(result);
+    }
   } catch (e) {
     res.status(400).send(JSON.stringify("error"));
     return;
   }
 
-  res.json(result);
 });
-cameraRouter.get("/api/cameras/:video", async (req, res) => {
+
+cameraRouter.get("/api/cameras/:video/video", async (req, res) => {
   let video = req.params.video;
 
 
@@ -51,15 +58,22 @@ cameraRouter.get("/api/camera/:ID", async (req, res) => {
   
   try {
     result = await databaseConnection.query(getCameraQuery, [cameraID]);
-    console.log(result);
-    //console.log(result[0]);
+    //console.log(result);
+    console.log(result[0]);
+    if (!result.length) {
+      
+      res.status(404).json({ error: "Cameras not found" });
+    } else {
+      
+      res.json(result[0]);
+    }
     
   } catch (error) {
     console.error("Error fetching camera access:", error);
     res.status(400).send(JSON.stringify("An error occurred while fetching camera access"));
     
   }
-  res.json(result[0]);
+  
 });
 
 ///DELETE/// 
@@ -108,7 +122,34 @@ cameraRouter.delete("/api/cameras/:id", async (req, res) => {
 ///PUT///
 cameraRouter.put("/api/cameras/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  const { location, junction ,video } = req.body;
+  const { location, junction, video } = req.body;
+
+  // Fetch the current username from the database
+  const getCurrentCameraQuery = "SELECT video FROM cameras WHERE ID = ?";
+  let currentCamera;
+  try {
+    currentCamera = await databaseConnection.query(getCurrentCameraQuery, [id]);
+  } catch (e) {
+    res.status(500).send(JSON.stringify("Server error"));
+    return;
+  }
+
+
+  // Check if the new video already exists in the database
+  if (currentCamera[0][0].video !== video){
+  const checkVideoQuery = "SELECT ID FROM cameras WHERE video = ? ";
+  let videoExists;
+  try {
+    videoExists = await databaseConnection.query(checkVideoQuery, [video]);
+    if (videoExists[0].length) {
+      res.status(400).send(JSON.stringify("Video already exists in the system, please choose another video"));
+      return;
+    }
+  } catch (e) {
+    res.status(500).send(JSON.stringify("Server error"));
+    return;
+  }
+}
 
   let sql = `UPDATE cameras SET`;
   const values = [];
@@ -122,10 +163,12 @@ cameraRouter.put("/api/cameras/:id", async (req, res) => {
     sql += ` junction = ?,`;
     values.push(junction);
   }
+
   if (video !== undefined) {
     sql += ` video = ?,`;
     values.push(video);
   }
+
   // Remove the trailing comma from the SQL statement
   sql = sql.slice(0, -1);
 
@@ -140,7 +183,7 @@ cameraRouter.put("/api/cameras/:id", async (req, res) => {
     return;
   }
 
-  // Fetch the updated user data after the update
+  // Fetch the updated camera data after the update
   const getCameraQuery = "SELECT * FROM cameras WHERE ID = ?";
   let result;
 
@@ -153,62 +196,47 @@ cameraRouter.put("/api/cameras/:id", async (req, res) => {
   }
 
   res.json(result[0]);
-
 });
 
-// POST request to create a new camera
-// cameraRouter.post("/cameras", (req, res) => {
-//   const { location, junction, video } = req.body;
-//   const query =
-//     "INSERT INTO cameras (location, junction, video) VALUES (?, ?, ?)";
 
-//   databaseConnection.query(
-//     query,
-//     [location, junction, video],
-//     (error, results) => {
-//       if (error) {
-//         res
-//           .status(500)
-//           .json({ error: "An error occurred while creating a camera." });
-//       } else {
-//         res.json({
-//           message: "Camera created successfully.",
-//           cameraId: results.insertId,
-//         });
-//       }
-//     }
-//   );
-// });
+
 cameraRouter.post("/api/cameras", async (req, res) => {
-  const camera = {
-    location: req.body.location,
-    junction: req.body.junction,
-    video: req.body.video,
-  };
-  const postCameraQuery = `INSERT INTO cameras (location, junction, video) VALUES (?, ?, ?)`;
-  let result;
-  console.log("camera");
-  console.log(camera);
+  const location = req.body.location;
+  const junction = req.body.junction;
+  const video = req.body.video;
+
+  if (!location || !junction || !video) {
+    res.status(400).send(JSON.stringify("Please fill in all required fields"));
+    return;
+  }
+
+  // בדיקה אם השם המשצלמה כבר קיימת במערכת
+  const checkCameraQuery = "SELECT * FROM cameras WHERE video = ?";
+  let cameraExists;
   try {
-    result = await databaseConnection.query(postCameraQuery, [
-      camera.location,
-      camera.junction,
-      camera.video,
-    ]);
-    const newCameraId = result[0].insertId; // תחזיר את המזהה שנוצר
-    console.log("result");
-    console.log(result);
-    console.log(newCameraId);
-    const newCamera = {ID: newCameraId,...camera }; // הוסף את המזהה למופע המצלמה
-    console.log("newCamera");
-    console.log(newCamera);
-    res.json(newCamera); // החזר את המצלמה עם המזהה ללקוח
-    //res.json(camera);
+    cameraExists = await databaseConnection.query(checkCameraQuery, [video]);
+    if (cameraExists[0].length) {
+      res.status(400).send(JSON.stringify("Video already exists in the system, please choose another video"));
+      return;
+    }
   } catch (e) {
-    res.status(400).send(JSON.stringify("Server error"));
+    res.status(500).send(JSON.stringify("Server error"));
+    return;
+  }
+
+  const postCameraQuery = "INSERT INTO cameras (location, junction, video) VALUES (?, ?, ?)";
+  let result;
+  try {
+    result = await databaseConnection.query(postCameraQuery, [location, junction, video]);
+    const newCameraId = result[0].insertId;
+    const newCamera = { ID: newCameraId, location, junction, video };
+    res.json(newCamera);
+  } catch (e) {
+    res.status(500).send(JSON.stringify("Server error"));
     return;
   }
 });
+
 
 
 

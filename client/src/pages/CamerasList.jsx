@@ -305,6 +305,11 @@ const CamerasList = () => {
           body: JSON.stringify(updatedCamera),
         }
       );
+      if (response.status === 400) {
+        const errorMessage = await response.json();
+        alert(errorMessage);
+        return;
+      }
       if (response.ok) {
         const updatedData = await response.json();
         console.log("Camera updated:", updatedData);
@@ -343,6 +348,11 @@ const CamerasList = () => {
           body: JSON.stringify(newCamera),
         }
       );
+      if (response.status === 400) {
+        const errorMessage = await response.json();
+        alert(errorMessage);
+        return;
+      }
 
       if (response.ok) {
         const addedCamera = await response.json();

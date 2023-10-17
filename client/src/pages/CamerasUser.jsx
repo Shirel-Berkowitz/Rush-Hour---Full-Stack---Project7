@@ -17,14 +17,21 @@ const CamerasUser = () => {
       if (!loaded) {
       try {
         const response = await fetch(
-          `http://localhost:3000/cameraAccessAPI/api/cameraAccess/${user.id}`,
+          `http://localhost:3000/cameraAccessAPI/api/cameraAccess/${user.id}/cameras`,
         );
+
+        if (response.status === 403) {
+          const errorMessage = await response.json();
+          alert(errorMessage);
+          return;
+        }
         //Camera ID
         const data = await response.json();
         setCameras(data);
         setLoaded(true);
          console.log("data");
          console.log(data);
+         console.log(data[0]);
 
 
         } catch (error) {

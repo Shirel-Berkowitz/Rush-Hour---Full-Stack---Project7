@@ -6,29 +6,59 @@ const passwordRouter = express.Router();
 
 ///POST///
 passwordRouter.post("/api/users/:userID/password", async (req, res) => {
-    const password =req.body.password; 
-    const userID =parseInt(req.params.userID);
-    console.log(password);
-    console.log(userID);
-      
-      
-    
-    const postPasswordQuery =
-      "INSERT INTO passwords (userID, password) VALUES (?, ?)";
-    let result;
+  const password = req.body.password;
+  const userID = parseInt(req.params.userID);
+
+  if (!password) {
+    //res.status(400).send(JSON.stringify("Please fill in all required fields"));
+    const deletQuery = "DELETE FROM users WHERE ID = ?  ";
+    let deleteResult;
   
     try {
-      result = await databaseConnection.query(postPasswordQuery, [userID, password]);
+      deleteResult = await databaseConnection.query(deletQuery, [userID]);
       
-      console.log("result");
-      console.log(result);
     } catch (e) {
-      res.status(400).send(JSON.stringify("error"));
+      res.status(400).send(JSON.stringify({ error: "An error occurred" }));
+  
       return;
     }
+    res.status(400).send(JSON.stringify("Please fill in all required fields"));
+    return;
     
-    res.status(200).json('success');
-  });
+  }
+  
+  if (password.length < 6) {
+    //res.status(400).send(JSON.stringify("Password must be at least 6 characters long"));
+
+    const deletQuery = "DELETE FROM users WHERE ID = ?  ";
+    let deleteResult;
+  
+    try {
+      deleteResult = await databaseConnection.query(deletQuery, [userID]);
+      
+    } catch (e) {
+      res.status(400).send(JSON.stringify({ error: "An error occurred" }));
+  
+      return;
+    }
+    res.status(400).send(JSON.stringify("Password must be at least 6 characters long"));
+    return;
+  }
+  
+  const postPasswordQuery = "INSERT INTO passwords (userID, password) VALUES (?, ?)";
+  let result;
+
+  try {
+    result = await databaseConnection.query(postPasswordQuery, [userID, password]);
+    console.log("result");
+    console.log(result);
+  } catch (e) {
+    res.status(500).send(JSON.stringify("error"));
+    return;
+  }
+  
+  res.status(200).json('success');
+});
 
 
 

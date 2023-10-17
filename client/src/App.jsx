@@ -16,7 +16,7 @@ import VideoAnalysis from "./pages/VideoAnalysis.jsx";
 
 function App() {
   return (
-    <BrowserRouter>
+     <BrowserRouter>
       <Routes>
         <Route path="/Login" element={<Login />} />
         <Route path="/" element={<Navigate to="/Login" />} />
@@ -36,7 +36,7 @@ function App() {
           <Route path=":id/CamerasUser/:cameraID/VideoAnalysis" element={<VideoAnalysis />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+     </BrowserRouter>
   );
 }
 

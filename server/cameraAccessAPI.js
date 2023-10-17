@@ -29,26 +29,29 @@ cameraAccessRouter.get("/api/cameraAccess/:cameraID", async (req, res) => {
   res.json(result[0]);
 });
 
-cameraAccessRouter.get("/api/cameraAccess/:userID", async (req, res) => {
+cameraAccessRouter.get("/api/cameraAccess/:userID/cameras", async (req, res) => {
   let userId = parseInt(req.params.userID);
 
   const getCameraQuery = "SELECT cameraID FROM cameraAccess WHERE userID = ?";
   let result;
-  
 
   try {
     result = await databaseConnection.query(getCameraQuery, [userId]);
     console.log(result);
-    console.log(result[0]);
-    
+
+    if (!result[0] || result[0].length === 0) {
+      res.status(403).send(JSON.stringify("You don't have access to any cameras. Please request access from an administrator."));
+      return;
+    }
     
   } catch (error) {
     console.error("Error fetching camera access:", error);
     res.status(400).send(JSON.stringify("An error occurred while fetching camera access"));
-    
   }
+
   res.json(result[0]);
 });
+
 
 // cameraAccessRouter.get("/api/cameraAccess/:cameraID", async (req, res) => {
 //   let cameraID = req.params.cameraID;
@@ -94,70 +97,61 @@ cameraAccessRouter.get("/api/cameraAccess/:userID", async (req, res) => {
 // });
 
 cameraAccessRouter.post("/api/cameraAccess/:userID/:cameraID", async (req, res) => {
-  const cameraID =parseInt(req.params.cameraID); 
-  const userID =parseInt(req.params.userID);
+  const cameraID = parseInt(req.params.cameraID);
+  const userID = parseInt(req.params.userID);
   console.log(cameraID);
   console.log(userID);
-    
-    
-  
-  const postcameraAccessQuery =
-    "INSERT INTO cameraAccess (userID, cameraID) VALUES (?, ?)";
-  let result;
 
-  try {
-    result = await databaseConnection.query(postcameraAccessQuery, [userID, cameraID]);
-    
-    console.log("result");
-    console.log(result);
-  } catch (e) {
-    res.status(400).send(JSON.stringify("error"));
-    return;
-  }
+  // Performing a SELECT query to check if a record with the same values already exists
+  const checkDuplicateQuery =  "SELECT * FROM cameraAccess WHERE userID = ? AND cameraID = ?";
   
-  res.status(200).json('success');
+  try {
+    const duplicates = await databaseConnection.query(checkDuplicateQuery, [userID, cameraID]);
+    console.log(duplicates);
+    console.log(duplicates[0].length);
+
+    if (duplicates[0].length === 1 ) {
+     
+      res.status(400).json({ error: "Record already exists" });
+    } else {
+      
+      const postcameraAccessQuery = "INSERT INTO cameraAccess (userID, cameraID) VALUES (?, ?)";
+      const result = await databaseConnection.query(postcameraAccessQuery, [userID, cameraID]);
+      res.status(200).json({ success: "Record created successfully" });
+      //res.json(result);
+    }
+    
+  } catch (e) {
+    // Handle any errors that occur during query execution
+    res.status(500).json({ error: "Error executing the query" });
+  }
 });
 
 
-///DELETE/// 
-cameraAccessRouter.delete("/api/cameraAccess/:userID", async (req, res) => {
-  const userID = parseInt(req.params.userID);
-  
 
-  const deletCamQuery = "DELETE FROM cameraAccess WHERE userID = ? ";
+
+///DELETE/// 
+cameraAccessRouter.delete("/api/cameraAccess/:userID/:cameraID", async (req, res) => {
+  const userID = parseInt(req.params.userID);
+  const cameraID = parseInt(req.params.cameraID);
+  console.log(userID);
+  console.log(cameraID);
+
+  const deletCamQuery = "DELETE FROM cameraAccess WHERE userID = ? AND cameraID = ? ";
   let deleteCamResult;
 
   try {
-    deleteCamResult = await databaseConnection.query(deletCamQuery, [userID]);
-    console.log(deleteCamResult);
+    deleteCamResult = await databaseConnection.query(deletCamQuery, [userID, cameraID]);
+
   } catch (e) {
-    res.status(400).send(JSON.stringify("error"));
+    res.status(400).send(JSON.stringify({ error: "An error occurred" }));
+
     return;
   }
-  // const getuserQuery = "SELECT * FROM users WHERE ID = ? ";
-  // let deleteCameraAcc;
-  // let selectResults;
-
-  // try {
-  //   selectResults = await databaseConnection.query(getuserQuery, [userID]);
-  //   console.log(selectResults);
-  // } catch (e) {
-  //   res.status(400).send(JSON.stringify("error"));
-  //   return;
-  // }
-  // deleteCameraAcc= selectResults[0];
-
-  // const deletCameraQuery = "DELETE FROM cameras WHERE ID = ? ";
-  // let deleteCameraResult;
-  // try {
-  //   deleteCameraResult = await databaseConnection.query(deletCameraQuery, [id]);
-  //   console.log(deleteCameraResult);
-  // } catch (e) {
-  //   res.status(400).send(JSON.stringify("error"));
-  //   return;
-  // }
+  res.status(200).json({ success: "Delete created successfully" });
+  //res.json(deleteCamResult);
   
-  res.json(deleteCamera);
+ 
 
 
 });
