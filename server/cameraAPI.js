@@ -49,6 +49,25 @@ cameraRouter.get("/api/cameras/:video/video", async (req, res) => {
   res.json(result[0]);
 });
 
+cameraRouter.get("/api/cameras/:location/location", async (req, res) => {
+  let location = req.params.location;
+
+
+  const getCameraQuery = "SELECT * FROM cameras WHERE location = ?";
+  let result;
+
+  try {
+    result = await databaseConnection.query(getCameraQuery,[location]);
+    console.log(result);
+    console.log(result[0]);
+  } catch (e) {
+    res.status(400).send(JSON.stringify("error"));
+    return;
+  }
+
+  res.json(result[0]);
+});
+
 
 cameraRouter.get("/api/camera/:ID", async (req, res) => {
   let cameraID = parseInt(req.params.ID);

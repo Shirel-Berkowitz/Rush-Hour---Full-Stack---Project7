@@ -12,6 +12,7 @@ import CamerasAdmin from "./pages/CamerasAdmin.jsx";
 import CamerasUser from "./pages/CamerasUser.jsx";
 import Admin from "./pages/Admin.jsx";
 import CamerasAccess from "./pages/CamerasAccess.jsx";
+import UserAccess from "./pages/UserAccess";
 import VideoAnalysis from "./pages/VideoAnalysis.jsx";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route path=":id/UserList" element={<UserList />} />
           <Route path=":id/CamerasList" element={<CamerasList />} />
           <Route path=":id/CamerasAccess" element={<CamerasAccess />} />
+          <Route path=":id/UserAccess" element={<UserAccess />} />
           <Route path=":id/CamerasAdmin" element={<CamerasAdmin />}  />
           <Route path=":id/CamerasAdmin/:cameraID/VideoAnalysis" element={<VideoAnalysis />} /> 
           

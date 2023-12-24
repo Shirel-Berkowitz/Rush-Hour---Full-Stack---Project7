@@ -158,6 +158,8 @@ cameraAccessRouter.delete("/api/cameraAccess/:userID/:cameraID", async (req, res
 
 
 
+
+
 // DELETE request to revoke camera access from a user
 // cameraAccessRouter.delete("/cameraAccess/:userId/:cameraId", (req, res) => {
 //   const userId = req.params.userId;

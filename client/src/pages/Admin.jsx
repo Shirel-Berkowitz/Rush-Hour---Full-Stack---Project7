@@ -30,6 +30,9 @@ const Admin = () => {
       <Link to={`/Admin/${user.id}/CamerasAccess`}>
         <button>Camera access permissions</button>
       </Link>
+      <Link to={`/Admin/${user.id}/UserAccess`}>
+        <button>User access permissions</button>
+      </Link>
 
       <nav className="user-navigation">
         <ul>
