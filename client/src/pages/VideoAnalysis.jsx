@@ -14,8 +14,8 @@ const VideoAnalysis = () => {
   const [descInput, setDescInput] = useState("");
   const [selectedPolygonIndex, setSelectedPolygonIndex] = useState(-1);
   const [deleteBtnDisabled, setDeleteBtnDisabled] = useState(true);
-  const [selectModeBtnDisabled, setSelectModeBtnDisabled] = useState(true);
-  const [drawModeBtnDisabled, setDrawModeBtnDisabled] = useState(true);
+  const [selectModeBtnDisabled, setSelectModeBtnDisabled] = useState(false);
+  const [drawModeBtnDisabled, setDrawModeBtnDisabled] = useState(false);
   const [selectModeBtnText, setSelectModeBtnText] = useState("Enter Select Mode");
   const [drawModeBtnText, setDrawModeBtnText] = useState("Exit Drawing Mode");
   const [selectModeBtnBackgroundColor, setSelectModeBtnBackgroundColor] = useState("");
@@ -23,7 +23,56 @@ const VideoAnalysis = () => {
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectedVertexIndex, setSelectedVertexIndex] = useState(-1);
 
+
+  const movePolygon = (e) => {
+    if (isSelecting && selectedPolygonIndex !== -1) {
+      const mouseX = e.clientX - canvasLeft + window.scrollX;
+      const mouseY = e.clientY - canvasRight + window.scrollY;
+  
+      const deltaX = mouseX - canvasLeft;
+      const deltaY = mouseY - canvasRight;
+  
+      const updatedPolygon = workplaces[selectedPolygonIndex].points.map((point) => ({
+        x: point.x + deltaX,
+        y: point.y + deltaY,
+      }));
+  
+      setWorkplaces((prevWorkplaces) => {
+        const newWorkplaces = [...prevWorkplaces];
+        newWorkplaces[selectedPolygonIndex] = {
+          ...newWorkplaces[selectedPolygonIndex],
+          points: updatedPolygon,
+        };
+        return newWorkplaces;
+      });
+  
+      renderWorkplaces();
+    }
+  };
+
+  const moveVertex = (e) => {
+    const canvas = canvasRef.current;
+    const canvasLeft = canvas.getBoundingClientRect().left + window.scrollX;
+    const canvasTop = canvas.getBoundingClientRect().top + window.scrollY;
+    
+    const mouseX = e.clientX - canvasLeft;
+    const mouseY = e.clientY - canvasTop;
+  
+    if (selectedPolygonIndex !== -1 && selectedVertexIndex !== -1) {
+      const newWorkplaces = [...workplaces];
+      const selectedPolygon = newWorkplaces[selectedPolygonIndex];
+      const selectedVertex = selectedPolygon.points[selectedVertexIndex];
+      
+      selectedVertex.x = mouseX;
+      selectedVertex.y = mouseY;
+  
+      setWorkplaces(newWorkplaces);
+      renderWorkplaces();
+    }
+  };
+
   const handleDrawMode = () => {
+     const canvas = canvasRef.current;
     setIsDrawing((prevIsDrawing) => !prevIsDrawing);
 
     if (!isDrawing) {
@@ -43,7 +92,13 @@ const VideoAnalysis = () => {
     }
   };
 
+  const stopMovingVertex = () => {
+    canvasRef.current.removeEventListener("mousemove", moveVertex);
+    canvasRef.current.removeEventListener("mouseup", stopMovingVertex);
+  };
+
   const handleSelectMode = () => {
+    const canvas = canvasRef.current;
     setIsSelecting((prevIsSelecting) => !prevIsSelecting);
 
     if (!isSelecting) {
@@ -141,12 +196,19 @@ const VideoAnalysis = () => {
   const loadAndDrawImage = useCallback(async () => {  
     const canvas = canvasRef.current;
 
-    if (!canvas || !camera.video) {
-      console.error("Canvas reference or camera video is not available.");
+    if (!canvas  ) {
+      console.error("Canvas reference   is not available.");
       return;
+  }else{
+    console.log("work");
+    console.log("isDrowing? ", isDrawing);
   }
+  if ( !camera.video) {
+    console.error(" camera video is not available.");
+    return;
+}
 
-    console.log(canvasRef);
+    console.log(canvas);
     console.log(canvasRef.current);
 
 
@@ -204,7 +266,7 @@ const VideoAnalysis = () => {
         });
 
         const drawPoly = (points, isSelected) => {
-          ctx.lineWidth = isSelected ? 4 : 2;
+          ctx.lineWidth = isSelected ? 7 : 5;
           ctx.beginPath();
           ctx.moveTo(points[0].x, points[0].y);
           points.slice(1).forEach((point) => {
@@ -263,58 +325,58 @@ const VideoAnalysis = () => {
           return -1; // Return -1 if no polygon is selected
         };
 
-        const movePolygon = (e) => {
-          if (isSelecting && selectedPolygonIndex !== -1) {
-            const mouseX = e.clientX - canvasLeft + window.scrollX;
-            const mouseY = e.clientY - canvasRight + window.scrollY;
+        // const movePolygon = (e) => {
+        //   if (isSelecting && selectedPolygonIndex !== -1) {
+        //     const mouseX = e.clientX - canvasLeft + window.scrollX;
+        //     const mouseY = e.clientY - canvasRight + window.scrollY;
         
-            const deltaX = mouseX - canvasLeft;
-            const deltaY = mouseY - canvasRight;
+        //     const deltaX = mouseX - canvasLeft;
+        //     const deltaY = mouseY - canvasRight;
         
-            const updatedPolygon = workplaces[selectedPolygonIndex].points.map((point) => ({
-              x: point.x + deltaX,
-              y: point.y + deltaY,
-            }));
+        //     const updatedPolygon = workplaces[selectedPolygonIndex].points.map((point) => ({
+        //       x: point.x + deltaX,
+        //       y: point.y + deltaY,
+        //     }));
         
-            setWorkplaces((prevWorkplaces) => {
-              const newWorkplaces = [...prevWorkplaces];
-              newWorkplaces[selectedPolygonIndex] = {
-                ...newWorkplaces[selectedPolygonIndex],
-                points: updatedPolygon,
-              };
-              return newWorkplaces;
-            });
+        //     setWorkplaces((prevWorkplaces) => {
+        //       const newWorkplaces = [...prevWorkplaces];
+        //       newWorkplaces[selectedPolygonIndex] = {
+        //         ...newWorkplaces[selectedPolygonIndex],
+        //         points: updatedPolygon,
+        //       };
+        //       return newWorkplaces;
+        //     });
         
-            renderWorkplaces();
-          }
-        };
+        //     renderWorkplaces();
+        //   }
+        // };
         
 
-        const moveVertex = (e) => {
-          const canvas = canvasRef.current;
-          const canvasLeft = canvas.getBoundingClientRect().left + window.scrollX;
-          const canvasTop = canvas.getBoundingClientRect().top + window.scrollY;
+        // const moveVertex = (e) => {
+        //   const canvas = canvasRef.current;
+        //   const canvasLeft = canvas.getBoundingClientRect().left + window.scrollX;
+        //   const canvasTop = canvas.getBoundingClientRect().top + window.scrollY;
           
-          const mouseX = e.clientX - canvasLeft;
-          const mouseY = e.clientY - canvasTop;
+        //   const mouseX = e.clientX - canvasLeft;
+        //   const mouseY = e.clientY - canvasTop;
         
-          if (selectedPolygonIndex !== -1 && selectedVertexIndex !== -1) {
-            const newWorkplaces = [...workplaces];
-            const selectedPolygon = newWorkplaces[selectedPolygonIndex];
-            const selectedVertex = selectedPolygon.points[selectedVertexIndex];
+        //   if (selectedPolygonIndex !== -1 && selectedVertexIndex !== -1) {
+        //     const newWorkplaces = [...workplaces];
+        //     const selectedPolygon = newWorkplaces[selectedPolygonIndex];
+        //     const selectedVertex = selectedPolygon.points[selectedVertexIndex];
             
-            selectedVertex.x = mouseX;
-            selectedVertex.y = mouseY;
+        //     selectedVertex.x = mouseX;
+        //     selectedVertex.y = mouseY;
         
-            setWorkplaces(newWorkplaces);
-            renderWorkplaces();
-          }
-        };
+        //     setWorkplaces(newWorkplaces);
+        //     renderWorkplaces();
+        //   }
+        // };
 
-        const stopMovingVertex = () => {
-          canvasRef.current.removeEventListener("mousemove", moveVertex);
-          canvasRef.current.removeEventListener("mouseup", stopMovingVertex);
-        };
+        // const stopMovingVertex = () => {
+        //   canvasRef.current.removeEventListener("mousemove", moveVertex);
+        //   canvasRef.current.removeEventListener("mouseup", stopMovingVertex);
+        // };
         
       } catch (error) {
         console.error("Error loading image:", error);
