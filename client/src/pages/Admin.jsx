@@ -1,5 +1,7 @@
 import { Outlet, Link } from "react-router-dom";
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import "../App.css";
 
 const Admin = () => {
@@ -7,14 +9,17 @@ const Admin = () => {
   return (
     <div className="users-container">
       <h1 className="user-name">welcome admin {user.name}</h1>
-      <Link to="/Login">
+      <Link
+        to="/Login"
+        style={{ position: "absolute", top: 0, right: 0, margin: "10px" }}
+      >
         <button
           className="logout-button"
           onClick={() => {
             localStorage.removeItem("currentUser");
           }}
         >
-          Logout
+          <FontAwesomeIcon icon={faSignOutAlt} />
         </button>
       </Link>
 
