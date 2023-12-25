@@ -5,6 +5,14 @@
   text-align: center;
 }
 
+/* BACKGROUND
+body {
+  margin: 0;
+  padding: 0;
+  background: url('your-background-image.jpg') no-repeat center center fixed;
+  background-size: cover;
+} */
+
 .card {
   padding: 2em;
 }
@@ -45,18 +53,12 @@ div .postDiv {
   margin-left: -50px;
 }
 
-.LoadMoreBtn {
-  border: 5px solid #716e63;
-  background-color: rgb(207, 204, 188);
-  border-radius: 10px;
-  transition: border-color 0.25s;
-}
-
+.LoadMoreBtn,
 .commentsDiv {
-  border: 5px solid #716e63;
-  background-color: rgb(207, 204, 188);
   border-radius: 10px;
   transition: border-color 0.25s;
+  border: 5px solid #716e63;
+  background-color: rgb(207, 204, 188);
 }
 
 .usersList,
@@ -101,3 +103,43 @@ div .postDiv {
   text-align: left;
   padding-right: 20%;
 } */
+
+/* Media query for tablet screens */
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1em;
+  }
+
+  div .postDiv {
+    padding: 0.4em 0.8em;
+    font-size: 0.9em;
+  }
+
+  .photosUl {
+    margin-left: 0;
+  }
+
+  .LoadMoreBtn,
+  .commentsDiv {
+    padding: 1rem;
+  }
+
+  .usersList,
+  .camerasList,
+  .camerasAccessList {
+    padding-left: 20px;
+  }
+
+  .form-group {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .form-group input {
+    flex: 2;
+  }
+}

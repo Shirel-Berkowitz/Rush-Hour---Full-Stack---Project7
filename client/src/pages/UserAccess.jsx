@@ -41,9 +41,8 @@ const UserAccess = () => {
     fetchUsers();
   }, []);
 
-  
   // Function to handle adding permission
-const handleAddPermission = (user) => {
+  const handleAddPermission = (user) => {
     if (activeUser && activeUser.ID === user.ID) {
       setActiveUser(null);
       setIsAddingPermission(false);
@@ -51,10 +50,9 @@ const handleAddPermission = (user) => {
       setActiveUser(user);
       setIsAddingPermission(true);
     }
-  
-    setInputs((values) => ({ ...values, location: '' }));
+
+    setInputs((values) => ({ ...values, location: "" }));
   };
-  
 
   // Function to send permission
   const handleSendPermission = async () => {
@@ -62,9 +60,10 @@ const handleAddPermission = (user) => {
     const camera = inputs.location;
     if (activeUser) {
       try {
-        const CameraResponse = await fetch(`http://localhost:3000/cameraAPI/api/cameras/${camera}/location`);
-        if (CameraResponse.status === 404 ) {
-          
+        const CameraResponse = await fetch(
+          `http://localhost:3000/cameraAPI/api/cameras/${camera}/location`
+        );
+        if (CameraResponse.status === 404) {
           alert("Camera does not exist in the system, please try again");
 
           return;
@@ -72,7 +71,7 @@ const handleAddPermission = (user) => {
         const cameraData = await CameraResponse.json();
         const cameraID = cameraData[0].ID;
         console.log(cameraID);
-  
+
         const response = await fetch(
           `http://localhost:3000/cameraAccessAPI/api/cameraAccess/${activeUser.ID}/${cameraID}`,
           {
@@ -83,13 +82,14 @@ const handleAddPermission = (user) => {
             body: JSON.stringify({ userID: activeUser.ID }),
           }
         );
-        if (response.status === 400 ) {
-          
-            alert("This user already has access to the camera, please choose another camera");
-  
-            return;
-          }
-  
+        if (response.status === 400) {
+          alert(
+            "This user already has access to the camera, please choose another camera"
+          );
+
+          return;
+        }
+
         if (response.ok) {
           const addCameraAccess = await response.json();
           console.log(addCameraAccess);
@@ -104,31 +104,29 @@ const handleAddPermission = (user) => {
       }
     }
   };
-  
-  
 
- // Function to handle deleting permission
-const handleDeletePermission = async (user) => {
+  // Function to handle deleting permission
+  const handleDeletePermission = async (user) => {
     if (activeUser && activeUser.ID === user.ID) {
       setActiveUser(null);
-      setIsAddingPermission(false); 
+      setIsAddingPermission(false);
       setIsDeletingPermission(false);
-      setCameraListVisible(false); 
+      setCameraListVisible(false);
     } else {
       setActiveUser(user);
-      setIsAddingPermission(false); 
+      setIsAddingPermission(false);
       setIsDeletingPermission(true);
-      setCameraListVisible(true); 
+      setCameraListVisible(true);
       try {
         const response = await fetch(
           `http://localhost:3000/cameraAccessAPI/api/cameraAccess/${user.ID}/cameras`
         );
         const data = await response.json();
         setRelatedCameras(data);
-  
+
         // Create a copy of the existing camera list
         let updatedCameraList = [];
-  
+
         // Fetch camera details for each cameraID and update the camera list
         for (const cameraObj of data) {
           const cameraID = cameraObj.cameraID;
@@ -136,13 +134,16 @@ const handleDeletePermission = async (user) => {
             `http://localhost:3000/cameraAPI/api/camera/${cameraID}`
           );
           const camera = await cameraResponse.json();
-  
-          cameraObj.location = { id: camera[0].ID, location: camera[0].location };
-  
+
+          cameraObj.location = {
+            id: camera[0].ID,
+            location: camera[0].location,
+          };
+
           // Add the camera to the updated camera list
           updatedCameraList.push(cameraObj.location);
         }
-  
+
         // Update the camera list in the state
         setCameraList(updatedCameraList);
       } catch (error) {
@@ -150,7 +151,7 @@ const handleDeletePermission = async (user) => {
       }
     }
   };
-  
+
   // Function to send permission deletion
   const handleSendPermissionDelete = (camera) => {
     if (activeUser) {
@@ -190,8 +191,13 @@ const handleDeletePermission = async (user) => {
         <ul className="camerasAccessList">
           {users.map((user) => (
             <li key={user.ID}>
-              <button className="delete-btn" onClick={() => handleAddPermission(user)}>
-                {activeUser && activeUser.ID === user.ID && isAddingPermission ? (
+              <button
+                className="delete-btn"
+                onClick={() => handleAddPermission(user)}
+              >
+                {activeUser &&
+                activeUser.ID === user.ID &&
+                isAddingPermission ? (
                   <span>
                     <FontAwesomeIcon icon={faPlus} />
                     Close Permission
@@ -200,22 +206,29 @@ const handleDeletePermission = async (user) => {
                   <FontAwesomeIcon icon={faPlus} />
                 )}
               </button>
-              {activeUser && activeUser.ID === user.ID && isAddingPermission && (
-                <div>
-                  <div>Enter the camera location for access:</div>
-                  <input
-                    type="text"
-                    id="location"
-                    name="location"
-                    value={inputs.location || ""}
-                    onChange={handleChange}
-                    required
-                  />
-                  <button onClick={handleSendPermission}>Send</button>
-                </div>
-              )}
-              <button className="delete-btn" onClick={() => handleDeletePermission(user)}>
-                {activeUser && activeUser.ID === user.ID && isDeletingPermission ? (
+              {activeUser &&
+                activeUser.ID === user.ID &&
+                isAddingPermission && (
+                  <div>
+                    <div>Enter the camera location for access:</div>
+                    <input
+                      type="text"
+                      id="location"
+                      name="location"
+                      value={inputs.location || ""}
+                      onChange={handleChange}
+                      required
+                    />
+                    <button onClick={handleSendPermission}>Send</button>
+                  </div>
+                )}
+              <button
+                className="delete-btn"
+                onClick={() => handleDeletePermission(user)}
+              >
+                {activeUser &&
+                activeUser.ID === user.ID &&
+                isDeletingPermission ? (
                   <span>
                     <FontAwesomeIcon icon={faTrashCan} />
                     Close Permission
@@ -224,20 +237,24 @@ const handleDeletePermission = async (user) => {
                   <FontAwesomeIcon icon={faTrashCan} />
                 )}
               </button>
-              <h4 className="cameraAccessDetails"> username: {user.username}</h4>
-              {activeUser && activeUser.ID === user.ID && isDeletingPermission && (
-                <div>
-                  <ul>
-                    {cameraList.map((camera) => (
-                      <li key={camera.id}>
-                        <button onClick={() => handleSendPermissionDelete(camera)}>
-                          {camera.location}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+              <h4 className="cameraAccessDetails"> username: </h4>{user.username}
+              {activeUser &&
+                activeUser.ID === user.ID &&
+                isDeletingPermission && (
+                  <div>
+                    <ul>
+                      {cameraList.map((camera) => (
+                        <li key={camera.id}>
+                          <button
+                            onClick={() => handleSendPermissionDelete(camera)}
+                          >
+                            {camera.location}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
             </li>
           ))}
         </ul>
