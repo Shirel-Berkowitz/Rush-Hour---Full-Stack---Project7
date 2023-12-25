@@ -237,7 +237,7 @@ const UserAccess = () => {
                   <FontAwesomeIcon icon={faTrashCan} />
                 )}
               </button>
-              <h4 className="cameraAccessDetails"> username: </h4>{user.username}
+              <h4 className="cameraAccessDetails"> Username: </h4>{user.username}
               {activeUser &&
                 activeUser.ID === user.ID &&
                 isDeletingPermission && (
