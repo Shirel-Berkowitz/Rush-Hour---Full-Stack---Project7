@@ -325,58 +325,10 @@ const VideoAnalysis = () => {
           return -1; // Return -1 if no polygon is selected
         };
 
-        // const movePolygon = (e) => {
-        //   if (isSelecting && selectedPolygonIndex !== -1) {
-        //     const mouseX = e.clientX - canvasLeft + window.scrollX;
-        //     const mouseY = e.clientY - canvasRight + window.scrollY;
-        
-        //     const deltaX = mouseX - canvasLeft;
-        //     const deltaY = mouseY - canvasRight;
-        
-        //     const updatedPolygon = workplaces[selectedPolygonIndex].points.map((point) => ({
-        //       x: point.x + deltaX,
-        //       y: point.y + deltaY,
-        //     }));
-        
-        //     setWorkplaces((prevWorkplaces) => {
-        //       const newWorkplaces = [...prevWorkplaces];
-        //       newWorkplaces[selectedPolygonIndex] = {
-        //         ...newWorkplaces[selectedPolygonIndex],
-        //         points: updatedPolygon,
-        //       };
-        //       return newWorkplaces;
-        //     });
-        
-        //     renderWorkplaces();
-        //   }
-        // };
         
 
-        // const moveVertex = (e) => {
-        //   const canvas = canvasRef.current;
-        //   const canvasLeft = canvas.getBoundingClientRect().left + window.scrollX;
-        //   const canvasTop = canvas.getBoundingClientRect().top + window.scrollY;
-          
-        //   const mouseX = e.clientX - canvasLeft;
-        //   const mouseY = e.clientY - canvasTop;
         
-        //   if (selectedPolygonIndex !== -1 && selectedVertexIndex !== -1) {
-        //     const newWorkplaces = [...workplaces];
-        //     const selectedPolygon = newWorkplaces[selectedPolygonIndex];
-        //     const selectedVertex = selectedPolygon.points[selectedVertexIndex];
-            
-        //     selectedVertex.x = mouseX;
-        //     selectedVertex.y = mouseY;
         
-        //     setWorkplaces(newWorkplaces);
-        //     renderWorkplaces();
-        //   }
-        // };
-
-        // const stopMovingVertex = () => {
-        //   canvasRef.current.removeEventListener("mousemove", moveVertex);
-        //   canvasRef.current.removeEventListener("mouseup", stopMovingVertex);
-        // };
         
       } catch (error) {
         console.error("Error loading image:", error);
@@ -389,26 +341,7 @@ const VideoAnalysis = () => {
     loadAndDrawImage();
   }, [loadAndDrawImage]);
 
-  // return (
-  //   <div>
-  //     <canvas ref={canvasRef}></canvas>
-  //     <div>
-  //       <button onClick={handleDrawMode} disabled={drawModeBtnDisabled}>
-  //         {drawModeBtnText}
-  //       </button>
-  //       <button onClick={handleSelectMode} disabled={selectModeBtnDisabled}>
-  //         {selectModeBtnText}
-  //       </button>
-  //       <button onClick={handleDone}>Done</button>
-  //       <button onClick={handleCancel}>Cancel</button>
-  //       <button onClick={undo}>Undo</button>
-  //       <button onClick={handleDelete} disabled={deleteBtnDisabled}>
-  //         Delete
-  //       </button>
-  //       <button onClick={handleSaveClick}>Save</button>
-  //     </div>
-  //   </div>
-  // );
+  
 
   return (
         <div className="vid-container">
@@ -454,6 +387,8 @@ const VideoAnalysis = () => {
 };
 
 export default VideoAnalysis;
+
+
 
 
 
