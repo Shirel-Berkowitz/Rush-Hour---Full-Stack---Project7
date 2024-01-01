@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -25,13 +29,12 @@ a:hover {
 
 body {
   margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent scrolling on the entire body */
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background: url(/images/White-curve-brush.jpeg);
-  background-size: 100%;
-  background-attachment: fixed;
 }
 
 h1 {
@@ -48,7 +51,7 @@ button {
   font-family: inherit;
   background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.25s ease-in-out;
 }
 button:hover {
   border-color: black;
@@ -61,16 +64,76 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    background-color: #1a1a1a;
   }
   a:hover {
-    color: #c8c09e;
+    color: greenyellow;
   }
   button {
-    background-color: #f9f9f9;
-    border-color: #838073;
+    background-color: rgb(169, 225, 165);
+    border-color: rgb(81, 86, 5);
     border-width: 1.5px;
     margin: 0.2em;
+  }
+}
+
+.loginPage {
+  overflow: hidden; /* Prevent scrolling on the entire body */
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh; /* Set the height of the container to the full viewport height */
+  width: 100%;
+  background-color: #1a1a1a;
+}
+
+.loginPage,
+.loginPage > * {
+  border: none;
+  outline: none;
+}
+
+.loginPage img {
+  width: 55%;
+  max-height: 100vh;
+  height: auto;
+  border-radius: 20px;
+  object-fit: fill; /* or contain, depending on your preference */
+}
+
+.loginPage h1 {
+  color: rgb(139, 37, 0);
+}
+
+.loginPage h2 {
+  color: rgb(218, 158, 20);
+}
+.loginPage label {
+  color: #fff;
+  font-weight: bold;
+  padding-right: 5px;
+}
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center items horizontally */
+  align-items: center; /* Center items vertically */
+  max-width: 40%;
+}
+
+.password-input {
+  padding-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .loginForm {
+    flex-direction: column; /* Stack elements vertically on smaller screens */
+    text-align: center; /* Center text content */
+  }
+
+  .loginForm {
+    max-width: 100%; /* Take up full width on smaller screens */
   }
 }
 
