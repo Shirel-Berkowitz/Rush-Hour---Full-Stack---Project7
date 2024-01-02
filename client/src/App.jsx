@@ -14,6 +14,7 @@ import Admin from "./pages/Admin.jsx";
 import CamerasAccess from "./pages/CamerasAccess.jsx";
 import UserAccess from "./pages/UserAccess";
 import VideoAnalysis from "./pages/VideoAnalysis.jsx";
+import UnusualEvents from "./pages/UnusualEvents";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path=":id/Register" element={<Register />} />
           <Route path=":id/UserList" element={<UserList />} />
           <Route path=":id/CamerasList" element={<CamerasList />} />
+          <Route path=":id/UnusualEvents" element={<UnusualEvents />} />
           <Route path=":id/CamerasAccess" element={<CamerasAccess />} />
           <Route path=":id/UserAccess" element={<UserAccess />} />
           <Route path=":id/CamerasAdmin" element={<CamerasAdmin />}  />
@@ -34,6 +36,7 @@ function App() {
         </Route>
         <Route path="/Users" element={<Users />}>
           <Route path=":id/Info" element={<Info />} />
+          <Route path=":id/UnusualEvents" element={<UnusualEvents />} />
           <Route path=":id/CamerasUser" element={<CamerasUser />} />
           <Route path=":id/CamerasUser/:cameraID/VideoAnalysis" element={<VideoAnalysis />} />
         </Route>

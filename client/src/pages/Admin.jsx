@@ -38,6 +38,9 @@ const Admin = () => {
       <Link to={`/Admin/${user.id}/UserAccess`}>
         <button>User access permissions</button>
       </Link>
+      <Link to={`/Admin/${user.id}/UnusualEvents`}>
+        <button>Unusual Events</button>
+      </Link>
 
       <nav className="user-navigation">
         <ul>

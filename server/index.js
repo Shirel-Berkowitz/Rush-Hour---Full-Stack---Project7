@@ -7,6 +7,7 @@ const usersRouter =require('./userAPI.js')
 const passwordRouter = require('./passwordAPI.js');
 const cameraRouter = require('./cameraAPI.js');
 const cameraAccessRouter = require('./cameraAccessAPI.js');
+const unusualEventsRouter = require('./UnusualEventsAPI.js');
 
 
 
@@ -35,6 +36,7 @@ app.use('/userAPI',usersRouter);
 app.use('/passwordAPI', passwordRouter);
 app.use('/cameraAPI', cameraRouter);
 app.use('/cameraAccessAPI', cameraAccessRouter);
+app.use('/UnusualEventsAPI', unusualEventsRouter);
 
 
 

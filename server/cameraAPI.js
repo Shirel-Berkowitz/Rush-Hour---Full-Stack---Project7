@@ -217,7 +217,7 @@ cameraRouter.put("/api/cameras/:id", async (req, res) => {
   res.json(result[0]);
 });
 
-
+////POST/////
 
 cameraRouter.post("/api/cameras", async (req, res) => {
   const location = req.body.location;
