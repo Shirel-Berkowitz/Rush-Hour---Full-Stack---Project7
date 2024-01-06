@@ -326,14 +326,12 @@ const UnusualEvents = () => {
                {event.eventVideo && (
               <div>
                <h4 className="EventDetails">Video: </h4>
-              <iframe
-              width="560"  
-              height="315"
-              src={event.eventVideo}
-              title={event.eventName}
-              frameBorder="0"
-              allowFullScreen
-              ></iframe>
+               <video width="560" height="315" controls>
+               <source src={event.eventVideo} type="video/mp4" />
+               Your browser does not support the video tag.
+               </video>
+              
+              
              </div>
               )}
               {isUpdatingEvent && updatedEvent && updatedEvent.eventID === event.eventID && (

@@ -153,14 +153,18 @@ cameraRouter.put("/api/cameras/:id", async (req, res) => {
     return;
   }
 
-
+  console.log(currentCamera[0][0].video);
+  console.log(video);
   // Check if the new video already exists in the database
   if (currentCamera[0][0].video !== video){
+    
   const checkVideoQuery = "SELECT ID FROM cameras WHERE video = ? ";
   let videoExists;
   try {
     videoExists = await databaseConnection.query(checkVideoQuery, [video]);
+    console.log(videoExists[0].length);
     if (videoExists[0].length) {
+      
       res.status(400).send(JSON.stringify("Video already exists in the system, please choose another video"));
       return;
     }
