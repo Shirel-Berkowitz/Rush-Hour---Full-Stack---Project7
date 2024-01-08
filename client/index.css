@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Bungee+Spice&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Anton&display=swap");
 
 * {
   box-sizing: border-box;
@@ -8,11 +9,9 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -22,18 +21,18 @@
 
 a {
   font-weight: 500;
-  color: #78735a;
+  color: #ffffff;
   text-decoration: inherit;
 }
-a:hover {
+/* a:hover {
   color: #a1955f;
-}
+} */
 
 body {
   margin: 0;
   padding: 0;
   /* overflow: hidden; Prevent scrolling on the entire body */
-  display: flex;
+  /* display: flex; */
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
@@ -65,11 +64,11 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
+    color: lightgray;
     background-color: #1a1a1a;
   }
   a:hover {
-    color: greenyellow;
+    color: rgb(236, 113, 13);
   }
   button {
     background-color: rgb(169, 225, 165);
@@ -126,6 +125,10 @@ button:focus-visible {
 
 .password-input {
   padding-bottom: 20px;
+}
+
+.password-input {
+  margin-left: 20px;
 }
 
 @media (max-width: 768px) {
@@ -244,11 +247,14 @@ input[type="checkbox"] {
   cursor: pointer;
   font-size: 1rem;
   position: relative;
-  outline: none; /* Remove the outline when the button is focused */
+  outline: none;
 }
 
+.password-toggle {
+  color: #edf0f1;
+}
 .password-toggle:focus-visible {
-  outline: none; /* Remove the outline for the password-toggle button */
+  outline: none;
 }
 
 .popup-content {
@@ -319,7 +325,7 @@ input[type="checkbox"] {
 }
 
 .nav__links li a:hover {
-  color: rgb(139, 37, 0);
+  color: rgb(218, 126, 20);
 }
 
 .nav__links li:last-child {
@@ -328,7 +334,7 @@ input[type="checkbox"] {
 
 .top-navbar button {
   padding: 9px 25px;
-  background-color: rgb(169, 225, 165);
+  background-color: rgb(218, 126, 20);
   border: none;
   border-radius: 50px;
   cursor: pointer;
@@ -336,7 +342,7 @@ input[type="checkbox"] {
 }
 
 .top-navbar button:hover {
-  background-color: rgb(218, 158, 20);
+  background-color: rgb(171, 37, 0);
 }
 
 .logout-button {
@@ -345,7 +351,8 @@ input[type="checkbox"] {
   border: none;
   cursor: pointer;
   transition: all 0.3s ease 0s;
-  color: #edf0f1;
+  /* background-color: rgb(254, 61, 8); */
+  /* color: #edf0f1; */
 }
 
 /* .logout-button:hover {
@@ -356,4 +363,8 @@ input[type="checkbox"] {
   .nav__links {
     justify-content: flex-start; /* Align items to the start on smaller screens */
   }
+}
+
+.welcome-username {
+  font-family: "Salsa", cursive;
 }

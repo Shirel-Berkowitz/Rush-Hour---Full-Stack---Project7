@@ -186,7 +186,7 @@ const CamerasAccess = () => {
   return (
     <div className="users-container">
       <div>
-        <h1>Access Permissions</h1>
+        <h2>Access Permissions</h2>
         <ul className="camerasAccessList">
           {cameras.map((camera) => (
             <li key={camera.ID}>

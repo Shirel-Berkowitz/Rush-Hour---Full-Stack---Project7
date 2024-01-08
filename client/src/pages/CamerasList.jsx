@@ -153,7 +153,7 @@ const CamerasList = () => {
         <button className="logout-button">Back</button>
       </Link>
       <div>
-        <h1>Cameras List</h1>
+        {/* <h1>Cameras List</h1> */}
         <button onClick={toggleAddCamera}>
           {isAdding ? "Cancel" : "Add New Camera"}
         </button>

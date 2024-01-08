@@ -104,8 +104,9 @@ export default function Login() {
   return (
     <div className="loginPage">
       <form className="loginForm" onSubmit={handleSubmit}>
-        <h1>Login</h1>
-        <div className="form-group">
+        <h1 className="logo">Rush hour</h1>
+        {/* <h1>Login</h1> */}
+        <div className="username-input form-group">
           <label htmlFor="username">Username:</label>
           <input
             type="text"
@@ -115,7 +116,8 @@ export default function Login() {
             onChange={handleChange1}
           />
         </div>
-        <h2>Please enter your password:</h2>
+        {/* <h2>Please enter your password:</h2> */}
+        <br />
         <div className="password-input form-group">
           <label htmlFor="password">Password:</label>
           <input

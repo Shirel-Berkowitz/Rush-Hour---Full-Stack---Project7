@@ -99,7 +99,7 @@ const UserList = () => {
         <button className="logout-button">Back</button>
       </Link>
       <div>
-        <h1>Users List</h1>
+        {/* <h1>Users List</h1> */}
         <ul className="usersList">
           {users.map((user) => (
             <li key={user.ID}>

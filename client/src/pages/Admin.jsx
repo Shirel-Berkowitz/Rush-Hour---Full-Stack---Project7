@@ -45,15 +45,7 @@ const Admin = () => {
               <Link to={`/Admin/${user.id}/Info`}>Info</Link>
             </li>
             <li>
-              <Link
-                to="/Login"
-                // style={{
-                //   position: "absolute",
-                //   top: 0,
-                //   right: 0,
-                //   margin: "10px",
-                // }}
-              >
+              <Link to="/Login">
                 <button
                   className="logout-button"
                   onClick={() => {
@@ -68,7 +60,10 @@ const Admin = () => {
         </nav>
       </header>
 
-      <h1 className="user-name">welcome admin {user.name}</h1>
+      <h1 className="welcome-username">
+        welcome {user.name}!<br />
+        (admin)
+      </h1>
 
       {/* <Link to={`/Admin/${user.id}/Register`}>
         <button>Add new user</button>
@@ -88,18 +83,18 @@ const Admin = () => {
       <Link to={`/Admin/${user.id}/UnusualEvents`}>
         <button>Unusual Events</button>
       </Link> */}
-
+      {/* 
       <nav className="user-navigation">
         <ul>
           <li>
             {<Link to={`/Admin/${user.id}/CamerasAdmin`}> My Cameras</Link>}
           </li>
           <li>
-            {/* {<Link to={`/Admin/${user.id}/VideoAnalysis`}>Video analysis</Link>} */}
+            {<Link to={`/Admin/${user.id}/VideoAnalysis`}>Video analysis</Link>}
           </li>
           <li>{<Link to={`/Admin/${user.id}/Info`}>Info</Link>}</li>
         </ul>
-      </nav>
+      </nav> */}
 
       <Outlet />
     </div>

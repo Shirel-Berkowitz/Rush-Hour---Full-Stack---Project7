@@ -12,7 +12,7 @@ const Info = () => {
 
   return (
     <div className="info-container">
-      <h1 className="info-header">Info</h1>
+      {/* <h1 className="info-header">Info</h1> */}
       {user && (
         <div className="background">
           <div className="info-details">

@@ -187,7 +187,7 @@ const UserAccess = () => {
   return (
     <div className="users-container">
       <div>
-        <h1>Access Permissions</h1>
+        <h2>Access Permissions</h2>
         <ul className="camerasAccessList">
           {users.map((user) => (
             <li key={user.ID}>
@@ -237,7 +237,8 @@ const UserAccess = () => {
                   <FontAwesomeIcon icon={faTrashCan} />
                 )}
               </button>
-              <h4 className="cameraAccessDetails"> Username: </h4>{user.username}
+              <h4 className="cameraAccessDetails"> Username: </h4>
+              {user.username}
               {activeUser &&
                 activeUser.ID === user.ID &&
                 isDeletingPermission && (
