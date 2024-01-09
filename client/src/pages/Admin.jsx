@@ -15,14 +15,17 @@ const Admin = () => {
               <h2 className="logo">Rush hour</h2>
             </li>
             <li>
-              <Link to={`/Admin/${user.id}/Register`}>Add user</Link>
+              <Link to={`/Admin/${user.id}/CamerasAdmin`}>My Cameras</Link>
+            </li>
+            <li>
+              <Link to={`/Admin/${user.id}/camerasList`}>All cameras</Link>
             </li>
             <li>
               <Link to={`/Admin/${user.id}/UserList`}>Users</Link>
             </li>
-            <li>
-              <Link to={`/Admin/${user.id}/camerasList`}>Cameras</Link>
-            </li>
+            {/* <li>
+              <Link to={`/Admin/${user.id}/Register`}>Add user</Link>
+            </li> */}
             <li>
               <Link to={`/Admin/${user.id}/CamerasAccess`}>
                 Cameras permissions
@@ -33,9 +36,6 @@ const Admin = () => {
             </li>
             <li>
               <Link to={`/Admin/${user.id}/UnusualEvents`}>Unusual Events</Link>
-            </li>
-            <li>
-              <Link to={`/Admin/${user.id}/CamerasAdmin`}>My Cameras</Link>
             </li>
             {/* Uncomment the following lines when needed */}
             {/* <li>

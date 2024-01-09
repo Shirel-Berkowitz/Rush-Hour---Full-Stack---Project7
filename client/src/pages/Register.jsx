@@ -11,7 +11,6 @@ const Register = () => {
     setInputs((values) => ({ ...values, [name]: value }));
   };
   async function fetchData() {
-    
     setInputs({});
 
     const user = {
@@ -82,14 +81,14 @@ const Register = () => {
     if (inputs.password !== inputs.validationPassword) {
       alert("Passwords do not match. Please try again.");
       return;
-    } 
+    }
     fetchData();
   };
 
   return (
-    <div className="background1">
+    <div>
       <form onSubmit={handleSubmit}>
-        <h1>Sign up</h1>
+        {/* <h1>Sign up</h1> */}
         <div className="form-group">
           <label htmlFor="name">Name: </label>
           <input

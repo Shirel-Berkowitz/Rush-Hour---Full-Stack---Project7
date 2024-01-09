@@ -11,7 +11,6 @@ import "../App.css";
 
 const UserList = () => {
   var currentUser = JSON.parse(localStorage.getItem("currentUser"));
-
   const [users, setUsers] = useState([]);
   const [updatedUser, setUpdatedUser] = useState(null);
   const [isUpdatingUser, setIsUpdatingUser] = useState(false);
@@ -98,6 +97,9 @@ const UserList = () => {
       <Link to="/Admin">
         <button className="logout-button">Back</button>
       </Link>
+      <button>
+        <Link to={`/Admin/{user.ID}/Register`}>Add user</Link>
+      </button>
       <div>
         {/* <h1>Users List</h1> */}
         <ul className="usersList">
@@ -120,12 +122,12 @@ const UserList = () => {
                 <FontAwesomeIcon icon={faPenToSquare} />
               </button>
               <h4 className="UserDetails"> name: </h4>
-              {user.name} <h4 className="UserDetails">username: </h4>
-              {user.username} <h4 className="UserDetails">rank: </h4>
+              {user.name} <h4 className="UserDetails"> username: </h4>
+              {user.username} <h4 className="UserDetails"> rank: </h4>
               {user.userRank}
               {isUpdatingUser && updatedUser && updatedUser.ID === user.ID && (
                 <div>
-                  <h2>Update User</h2>
+                  {/* <h2>Update User</h2> */}
                   <input
                     type="text"
                     placeholder="Name"

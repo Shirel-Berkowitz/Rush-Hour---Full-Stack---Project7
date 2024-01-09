@@ -160,7 +160,7 @@ const CamerasList = () => {
 
         {isAdding && (
           <div>
-            <h2>Add Camera</h2>
+            {/* <h2>Add Camera</h2> */}
             <input
               type="text"
               name="location"
@@ -215,7 +215,7 @@ const CamerasList = () => {
                 updatedCamera &&
                 updatedCamera.ID === camera.ID && (
                   <div>
-                    <h2>Update Camera</h2>
+                    {/* <h2>Update Camera</h2> */}
                     <input
                       type="text"
                       placeholder="Location"
