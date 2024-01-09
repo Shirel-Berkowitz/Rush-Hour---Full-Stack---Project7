@@ -228,9 +228,11 @@ const VideoAnalysis = () => {
      
       try {
         const image = await loadImage(camera.video);
-        canvas.width = image.width;
-        canvas.height = image.height;
-        ctx.drawImage(image, 0, 0, image.width, image.height);
+        // canvas.width = image.width;
+        // canvas.height = image.height;
+         canvas.width = 580;
+         canvas.height = 350;
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
         var canvasLeft = canvas.getBoundingClientRect().left;
         var canvasRight = canvas.getBoundingClientRect().top;

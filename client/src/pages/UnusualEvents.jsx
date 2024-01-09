@@ -319,13 +319,13 @@ const UnusualEvents = () => {
                   : ""}
                 <FontAwesomeIcon icon={faPenToSquare} />
               </button>
-              <h4 className="EventDetails"> Event: </h4> {event.eventName}
-              <h4 className="EventDetails">eventType: </h4> {event.eventType} 
-              <h4 className="EventDetails">eventDate: </h4> {event.eventDate}
+              <h4 className="EventDetails"> Event: </h4>{event.eventName}
+              {/* <h4 className="EventDetails">eventType: </h4> {event.eventType} 
+              <h4 className="EventDetails">eventDate: </h4> {event.eventDate} */}
               <br />
                {event.eventVideo && (
               <div>
-               <h4 className="EventDetails">Video: </h4>
+               {/* <h4 className="EventDetails">Video: </h4> */}
                <video width="560" height="315" controls>
                <source src={event.eventVideo} type="video/mp4" />
                Your browser does not support the video tag.

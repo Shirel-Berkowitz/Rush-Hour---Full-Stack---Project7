@@ -208,9 +208,12 @@ const CamerasList = () => {
                 <FontAwesomeIcon icon={faPenToSquare} />
               </button>
               <h4 className="cameraDetails"> location: </h4>
-              {camera.location} <h4 className="cameraDetails"> junction: </h4>
+              {camera.location} 
+              <br/>
+              {/* <h4 className="cameraDetails"> junction: </h4>
               {camera.junction}
-              <h4 className="cameraDetails"> video: </h4> {camera.video}
+              <h4 className="cameraDetails"> video: </h4> {camera.video} */}
+              <img src={camera.video} alt="Camera Image" width="560" height="315" />
               {isUpdating &&
                 updatedCamera &&
                 updatedCamera.ID === camera.ID && (
