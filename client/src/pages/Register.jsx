@@ -89,6 +89,9 @@ const Register = () => {
     <div>
       <form onSubmit={handleSubmit}>
         {/* <h1>Sign up</h1> */}
+        <Link to="/Admin">
+        <button className="logout-button">Back</button>
+      </Link>
         <div className="form-group">
           <label htmlFor="name">Name: </label>
           <input
