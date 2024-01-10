@@ -276,9 +276,9 @@ const VideoAnalysis = () => {
             if (selectedPolygonIndex !== -1) {
               setDeleteBtnDisabled(false);
               setSelectModeBtnText("Exit Select Mode");
-            } else {
-              setSelectModeBtnText("Enter Select Mode");
-            }
+            } //  else {
+            //   setSelectModeBtnText("Enter Select Mode");
+            // }
           }
         });
 
