@@ -380,7 +380,7 @@ const UnusualEvents = () => {
                       </div>
                     )}
 
-                  <video width="560" height="315" controls>
+                  <video controls>
                     <source src={event.eventVideo} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
