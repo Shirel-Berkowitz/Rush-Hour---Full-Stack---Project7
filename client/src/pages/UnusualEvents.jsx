@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../App.css";
 
 const UnusualEvents = () => {
-   var currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  var currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   const [events, setEvents] = useState([]);
   const [copyEvents, setCopyEvents] = useState([]);
@@ -22,41 +22,37 @@ const UnusualEvents = () => {
   const [isUpdatingEvent, setIsUpdatingEvent] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [inputs, setInputs] = useState({});
-  
-
 
   const handleSearchButton = () => {
     setIsSearchOpen((prevState) => !prevState);
     setCopyEvents(events);
-  }
+  };
   const handleEventTypeButton = () => {
     setIsEventTypeOpen(!isEventTypeOpen);
   };
   const toggleAddEvent = () => {
     setIsAdding((prevState) => !prevState);
-  }
+  };
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
     setInputs((values) => ({ ...values, [name]: value }));
   };
 
-
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const response = await fetch(`http://localhost:3000/UnusualEventsAPI/api/unusualevents`);
+        const response = await fetch(
+          `http://localhost:3000/UnusualEventsAPI/api/unusualevents`
+        );
         const data = await response.json();
         setEvents(data[0]);
         setCopyEvents(data[0]);
-        
-        
       } catch (error) {
         console.error("Error fetching unusual events", error);
       }
     }
     fetchEvents();
-    
   }, []);
 
   const handleSearch = () => {
@@ -66,15 +62,14 @@ const UnusualEvents = () => {
       alert("Please enter an event name for search");
       return;
     }
-  
-    
-    const foundEvent = events.find((event) => event.eventName === searchEventName);
-  
+
+    const foundEvent = events.find(
+      (event) => event.eventName === searchEventName
+    );
+
     if (foundEvent) {
-      
-        setCopyEvents([foundEvent]);
+      setCopyEvents([foundEvent]);
     } else {
-      
       alert(`Event "${searchEventName}" does not exist`);
     }
   };
@@ -84,8 +79,7 @@ const UnusualEvents = () => {
     setIsEventTypeOpen(false);
 
     if (selectedEventType === "All") {
-      
-        setCopyEvents(events);
+      setCopyEvents(events);
     } else {
       // אם נבחר סוג אירוע, הצג רק את האירועים מאותו הסוג
       const filteredEvents = events.filter(
@@ -100,22 +94,29 @@ const UnusualEvents = () => {
     }
   };
 
-
   const handleDeleteEnevt = async (id) => {
-    
     try {
-      await fetch(`http://localhost:3000/UnusualEventsAPI/api/unusualevents/${id}`, {
-        method: "DELETE",
-      });
+      await fetch(
+        `http://localhost:3000/UnusualEventsAPI/api/unusualevents/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
-      setEvents((prevEvents) => prevEvents.filter((event) => event.eventID !== id));
+      setEvents((prevEvents) =>
+        prevEvents.filter((event) => event.eventID !== id)
+      );
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
   const handleUpdateEvent = (event) => {
-    if (isUpdatingEvent && updatedEvent && updatedEvent.eventID === Event.eventID) {
+    if (
+      isUpdatingEvent &&
+      updatedEvent &&
+      updatedEvent.eventID === Event.eventID
+    ) {
       setUpdatedEvent(null);
       setIsUpdatingEvent(false);
     } else {
@@ -166,11 +167,10 @@ const UnusualEvents = () => {
   const handleAddEvent = async () => {
     try {
       const newEvent = {
-        eventName: inputs. eventName,
+        eventName: inputs.eventName,
         eventType: inputs.eventType,
         eventDate: inputs.eventDate,
         eventVideo: inputs.eventVideo,
-        
       };
 
       const response = await fetch(
@@ -203,7 +203,6 @@ const UnusualEvents = () => {
     }
   };
 
-
   return (
     <div className="users-container">
       <Link to="/Admin">
@@ -212,9 +211,9 @@ const UnusualEvents = () => {
       <div>
         <h1>Unusual Events</h1>
         <div>
-        <button className="search-btn" onClick={handleSearchButton}>
-               {isSearchOpen ? "Back to All Events" : "Search Event"}
-             </button>
+          <button className="search-btn" onClick={handleSearchButton}>
+            {isSearchOpen ? "Back to All Events" : "Search Event"}
+          </button>
           {isSearchOpen && (
             <div>
               <label htmlFor="searchEvent">Search Event Name: </label>
@@ -227,7 +226,6 @@ const UnusualEvents = () => {
               <button className="search-btn" onClick={handleSearch}>
                 Search
               </button>
-              
             </div>
           )}
         </div>
@@ -248,10 +246,7 @@ const UnusualEvents = () => {
                 <option value="Fire">Fire</option>
                 <option value="Accident">Accident</option>
               </select>
-              <button
-                className="search-btn"
-                onClick={handleSearchByEventType}
-              >
+              <button className="search-btn" onClick={handleSearchByEventType}>
                 Search
               </button>
             </div>
@@ -260,7 +255,6 @@ const UnusualEvents = () => {
         <button onClick={toggleAddEvent}>
           {isAdding ? "Cancel" : "Add New Event"}
         </button>
-        
 
         {isAdding && (
           <div>
@@ -314,72 +308,82 @@ const UnusualEvents = () => {
                 className="edit-btn"
                 onClick={() => handleUpdateEvent(event)}
               >
-                {isUpdatingEvent && updatedEvent && updatedEvent.eventID === event.eventID
+                {isUpdatingEvent &&
+                updatedEvent &&
+                updatedEvent.eventID === event.eventID
                   ? "Close Update"
                   : ""}
                 <FontAwesomeIcon icon={faPenToSquare} />
               </button>
-              <h4 className="EventDetails"> Event: </h4>{event.eventName}
+              <h4 className="EventDetails"> Event: </h4>
+              {event.eventName}
               {/* <h4 className="EventDetails">eventType: </h4> {event.eventType} 
               <h4 className="EventDetails">eventDate: </h4> {event.eventDate} */}
               <br />
-               {event.eventVideo && (
-              <div>
-               {/* <h4 className="EventDetails">Video: </h4> */}
-               <video width="560" height="315" controls>
-               <source src={event.eventVideo} type="video/mp4" />
-               Your browser does not support the video tag.
-               </video>
-              
-              
-             </div>
-              )}
-              {isUpdatingEvent && updatedEvent && updatedEvent.eventID === event.eventID && (
+              {event.eventVideo && (
                 <div>
-                  <h2>Update Event</h2>
-                  <input
-                    type="text"
-                    placeholder="eventName"
-                    value={updatedEvent.eventName}
-                    onChange={(e) =>
-                      setUpdatedEvent({ ...updatedEvent, eventName: e.target.value })
-                    }
-                  />
-                  <input
-                    type="text"
-                    placeholder="eventType"
-                    value={updatedEvent.eventType}
-                    onChange={(e) =>
-                      setUpdatedEvent({
-                        ...updatedEvent,
-                        eventType: e.target.value,
-                      })
-                    }
-                  />
-                  <input
-                    type="text"
-                    placeholder="eventDate"
-                    value={updatedEvent.eventDate}
-                    onChange={(e) =>
-                      setUpdatedEvent({
-                        ...updatedEvent,
-                        eventDate: e.target.value,
-                      })
-                    }
-                  />
-                  <input
-                    type="text"
-                    placeholder="eventVideo"
-                    value={updatedEvent.eventVideo}
-                    onChange={(e) =>
-                      setUpdatedEvent({
-                        ...updatedEvent,
-                        eventVideo: e.target.value,
-                      })
-                    }
-                  />
-                  
-                  <button onClick={handleUpdateEventSubmit}>Update</button>
+                  {/* <h4 className="EventDetails">Video: </h4> */}
+
+                  {isUpdatingEvent &&
+                    updatedEvent &&
+                    updatedEvent.eventID === event.eventID && (
+                      <div>
+                        {/* <h2>Update Event</h2> */}
+                        <input
+                          type="text"
+                          placeholder="eventName"
+                          value={updatedEvent.eventName}
+                          onChange={(e) =>
+                            setUpdatedEvent({
+                              ...updatedEvent,
+                              eventName: e.target.value,
+                            })
+                          }
+                        />
+                        <input
+                          type="text"
+                          placeholder="eventType"
+                          value={updatedEvent.eventType}
+                          onChange={(e) =>
+                            setUpdatedEvent({
+                              ...updatedEvent,
+                              eventType: e.target.value,
+                            })
+                          }
+                        />
+                        <input
+                          type="text"
+                          placeholder="eventDate"
+                          value={updatedEvent.eventDate}
+                          onChange={(e) =>
+                            setUpdatedEvent({
+                              ...updatedEvent,
+                              eventDate: e.target.value,
+                            })
+                          }
+                        />
+                        <input
+                          type="text"
+                          placeholder="eventVideo"
+                          value={updatedEvent.eventVideo}
+                          onChange={(e) =>
+                            setUpdatedEvent({
+                              ...updatedEvent,
+                              eventVideo: e.target.value,
+                            })
+                          }
+                        />
+
+                        <button onClick={handleUpdateEventSubmit}>
+                          Update
+                        </button>
+                      </div>
+                    )}
+
+                  <video width="560" height="315" controls>
+                    <source src={event.eventVideo} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
                 </div>
               )}
             </li>
@@ -388,6 +392,6 @@ const UnusualEvents = () => {
       </div>
     </div>
   );
- };
+};
 
 export default UnusualEvents;

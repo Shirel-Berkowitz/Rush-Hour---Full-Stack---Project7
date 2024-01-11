@@ -116,7 +116,6 @@ export default function Login() {
             onChange={handleChange1}
           />
         </div>
-        {/* <h2>Please enter your password:</h2> */}
         <br />
         <div className="password-input form-group">
           <label htmlFor="password">Password:</label>
@@ -141,7 +140,7 @@ export default function Login() {
           Login
         </button>
       </form>
-      <img src="/images/loginBackground.png"></img>
+      <img id="loginImg" src="/images/loginBackground.png"></img>
     </div>
   );
 }

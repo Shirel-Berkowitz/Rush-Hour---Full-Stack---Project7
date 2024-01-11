@@ -255,7 +255,9 @@ const CamerasList = () => {
                   </div>
                 )}
               <img
+                className="cameraListImg"
                 src={camera.video}
+                // src="/images/loginBackground.png"
                 alt="Camera Image"
                 width="560"
                 height="315"
